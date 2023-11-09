@@ -232,9 +232,17 @@ public class ReviewMailSend extends UnifiedAgent {
             String mailPdfPath = Utils.convertExcelToPdf(mailExcelPath, Conf.DocReviewPaths.MainPath + "/" + mtpn + "[" + uniqueId + "].pdf");
 
             IDocument rvwDoc = Utils.createReviewHistoryAttachment(ses, srv, mainDoc);
+
+            IRepresentation htmt = rvwDoc.addRepresentation(".pdf", "Review History");
+            htmt.addPartDocument(mailPdfPath);
+
+            rvwDoc.commit();
+
             IInformationObjectLinks links = proi.getLoadedInformationObjectLinks();
             links.addInformationObject(rvwDoc.getID());
 
+            ILink lnk1 = srv.createLink(ses, mainDoc.getID(), null, rvwDoc.getID());
+            lnk1.commit();
 
             //IRepresentation pdfr = mainDoc.addRepresentation(".pdf", "Doc Review Mail");
             //pdfr.addPartDocument(mailPdfPath);
@@ -243,10 +251,6 @@ public class ReviewMailSend extends UnifiedAgent {
             //IRepresentation htmr = mainDoc.addRepresentation(".html", "Review History");
             //htmr.addPartDocument(mailHtmlPath);
 
-            IRepresentation htmt = rvwDoc.addRepresentation(".pdf", "Review History");
-            htmt.addPartDocument(mailPdfPath);
-
-            rvwDoc.commit();
             mainDoc.commit();
             proi.commit();
 
