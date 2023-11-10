@@ -1,0 +1,26 @@
+]Where Clause: TYPE = '32e74338-d268-484d-99b0-f90187240549' AND CCMPRJCARD_CODE = 'PRJ_002'
+)TASK-Name[1]:Wait for Parallel Approval
+TASK-Code[1]:waitforapproval
+)TASK-Name[2]:Wait for Parallel Approval
+TASK-Code[2]:waitforapproval
+TASK-Name[3]:Start Task
+TASK-Code[3]:Step01
+)TASK-Name[4]:Wait for Parallel Approval
+TASK-Code[4]:waitforapproval
+TASK-Name[5]:Generate CRS
+TASK-Code[5]:
+¡Where Clause: TYPE = '629a28c4-6c36-44d0-90f7-1e5802f038e8' AND MAINTASKREFERENCE = 'SP03BPM24fbcfda9c-c6e0-4e8f-8520-a778f8b844d8182023-11-09T12:08:32.358Z00'
+ [DocTitle]  : ObjectName
+# [ProjectName]  : ccmPRJCard_name
+! [ProjectNo]  : ccmPRJCard_code
+ [RevNo]  : ccmPrjDocRevision
+ [Filename]  : @FILE_NAME@
+% [DocumentType]  : ccmPrjDocDocType
+ [DocNo]  : ccmPrjDocNumber
+& [Discipline]  : ccmPrjDocDiscipline
+( [IssueStatus]  : ccmPrjDocIssueStatus
+ƒWhere Clause: TYPE = 'b9cf43d1-a4d3-482f-9806-44ae64c6139d' AND CCMPRJCARD_CODE = 'PRJ_002' AND OBJECTNUMBER2 = 'DOC_REVIEW_MAIL'
+ÄWhere Clause: TYPE = '3e1fe7b3-3e86-4910-8155-c29b662e71d6' AND CCMPRJDOCDOCTYPE = 'CRS' AND CCMREFERENCENUMBER = 'SD07PRJ_DOC24ae0f6bea-14aa-4973-ad35-7975bd8116e4182023-11-06T06:04:45.589Z011'
+	Tested.
+
+Finished
