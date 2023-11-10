@@ -31,7 +31,6 @@ public class ReviewMailSend extends UnifiedAgent {
             this.helper = new ProcessHelper(ses);
             ITask task = getEventTask();
 
-            this.helper = new ProcessHelper(ses);
             (new File(Conf.DocReviewPaths.MainPath)).mkdir();
             IProcessInstance proi = task.getProcessInstance();
 
@@ -53,6 +52,24 @@ public class ReviewMailSend extends UnifiedAgent {
             IDocument mainDoc = srv.getDocument4ID(mdid , ses);
             if(mainDoc == null){
                 throw new Exception("Main Document not found [" + mdid + "].");
+            }
+
+            ILink[] slns = srv.getReferencedRelationships(ses, mainDoc, true);
+            for(ILink slnk : slns){
+                IInformationObject stgt = slnk.getTargetInformationObject();
+
+                if(stgt.getClassID().equals(Conf.ClassIDs.EngineeringAttachments)
+                        && Utils.hasDescriptor((IInformationObject) stgt, Conf.Descriptors.DocType)
+                        && stgt.getDescriptorValue(Conf.Descriptors.DocType, String.class).equals("Review-History")){
+                    srv.removeRelationship(ses, slnk);
+                    continue;
+                }
+                if(stgt.getClassID().equals(Conf.ClassIDs.EngineeringAttachments)
+                        && Utils.hasDescriptor((IInformationObject) stgt, Conf.Descriptors.DocType)
+                        && stgt.getDescriptorValue(Conf.Descriptors.DocType, String.class).equals("CRS")){
+                    srv.removeRelationship(ses, slnk);
+                    continue;
+                }
             }
 
             String uniqueId = UUID.randomUUID().toString();
@@ -241,15 +258,16 @@ public class ReviewMailSend extends UnifiedAgent {
             IInformationObjectLinks links = proi.getLoadedInformationObjectLinks();
             links.addInformationObject(rvwDoc.getID());
 
+
             ILink lnk1 = srv.createLink(ses, mainDoc.getID(), null, rvwDoc.getID());
             lnk1.commit();
 
-            //IRepresentation pdfr = mainDoc.addRepresentation(".pdf", "Doc Review Mail");
-            //pdfr.addPartDocument(mailPdfPath);
 
-            //Utils.updateRepresentation(mainDoc, ".html", "Review History", mailHtmlPath);
-            //IRepresentation htmr = mainDoc.addRepresentation(".html", "Review History");
-            //htmr.addPartDocument(mailHtmlPath);
+            IDocument cdoc = (IDocument) Utils.getEngineeringCRS(mainDoc.getID(), helper);
+            if(cdoc != null){
+                ILink lnk2 = srv.createLink(ses, mainDoc.getID(), null, cdoc.getID());
+                lnk2.commit();
+            }
 
             mainDoc.commit();
             proi.commit();

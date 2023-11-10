@@ -42,6 +42,20 @@ import java.util.zip.ZipOutputStream;
 
 public class Utils {
 
+    static IInformationObject getEngineeringCRS(String refn, ProcessHelper helper) {
+        StringBuilder builder = new StringBuilder();
+        builder.append("TYPE = '").append(Conf.ClassIDs.EngineeringAttachments).append("'")
+                .append(" AND ")
+                .append(Conf.DescriptorLiterals.DocType).append(" = '").append("CRS").append("'")
+                .append(" AND ")
+                .append(Conf.DescriptorLiterals.ReferenceNumber).append(" = '").append(refn).append("'");
+        String whereClause = builder.toString();
+        System.out.println("Where Clause: " + whereClause);
+
+        IInformationObject[] informationObjects = helper.createQuery(new String[]{Conf.Databases.EngineeringAttachments} , whereClause , 1);
+        if(informationObjects.length < 1) {return null;}
+        return informationObjects[0];
+    }
     static IRepresentation updateRepresentation(IDocument document, String type, String desc, String path) throws Exception {
         IRepresentation[] list = document.getRepresentationList();
         IRepresentation rtrn;

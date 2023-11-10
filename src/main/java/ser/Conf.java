@@ -50,12 +50,15 @@ public class Conf {
         public static final String PrjCardCode = "CCMPRJCARD_CODE";
         public static final String MainTaskReference = "MAINTASKREFERENCE";
         public static final String ObjectNumberExternal = "OBJECTNUMBER2";
+        public static final String DocType = "CCMPRJDOCDOCTYPE";
+        public static final String ReferenceNumber = "CCMREFERENCENUMBER";
 
     }
     public static class Databases{
         public static final String BPM = "BPM";
         public static final String Company = "D_QCON";
         public static final String ProjectWorkspace = "PRJ_FOLDER";
+        public static final String EngineeringAttachments = "PRJ_CRS";
 
     }
     public static class Bookmarks{
