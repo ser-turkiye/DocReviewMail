@@ -9,6 +9,7 @@ import de.ser.doxis4.agentserver.UnifiedAgent;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -34,71 +35,22 @@ public class ReviewMailTest extends UnifiedAgent {
             this.helper = new ProcessHelper(ses);
             ITask task = getEventTask();
 
-            this.helper = new ProcessHelper(ses);
+            Date tbgn = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse("08/11/2023 14:11:00");
+            Date tend = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse("01/11/2023 08:30:00");
 
-            IProcessInstance proi = task.getProcessInstance();
-
-
-
-            String prjn = proi.getDescriptorValue(Conf.Descriptors.ProjectNo, String.class);
-            if(prjn.isEmpty()){
-                throw new Exception("Project no is empty.");
-            }
-            String mdid = proi.getDescriptorValue(Conf.Descriptors.MainDocRef, String.class);
-            if(mdid.isEmpty()){
-                throw new Exception("Main Doc Ref is empty.");
+            long durd  = 0L, diff = 0L;
+            double durh  = 0.0;
+            if(tend != null && tbgn != null) {
+                diff = (tend.getTime() > tbgn.getTime() ? tend.getTime() - tbgn.getTime() : tbgn.getTime() - tend.getTime());
+                durd = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+                durh = (TimeUnit.MINUTES.convert(diff, TimeUnit.MILLISECONDS) - (durd * 24 * 60)) / 60d;
+                durh = Double.valueOf((new DecimalFormat("#.##")).format(durh));
             }
 
-            IInformationObject prjt = Utils.getProjectWorkspace(prjn, helper);
-            if(prjt == null){
-                throw new Exception("Project not found [" + prjn + "].");
-            }
-            IDocument mainDoc = srv.getDocument4ID(mdid , ses);
-            if(mainDoc == null){
-                throw new Exception("Main Document not found [" + mdid + "].");
-            }
 
-            String uniqueId = UUID.randomUUID().toString();
-            Collection<ITask> tsks = proi.findTasks();
+            System.out.println("Duration-Day    : " + durd);
+            System.out.println("Duration-Hour   : " + durh);
 
-            JSONObject rvws = new JSONObject();
-
-            Date tbgn = null, tend = null;
-            Integer tcnt = 0, ccnt = 0;
-            for(ITask ttsk : tsks){
-                if(ttsk.getCreationDate() != null
-                        && (tbgn == null  || tbgn.after(ttsk.getCreationDate()))){
-                    tbgn = ttsk.getCreationDate();
-                }
-                if(ttsk.getFinishedDate() != null
-                        && (tend == null  || tend.before(ttsk.getFinishedDate()))){
-                    tend = ttsk.getFinishedDate();
-                }
-                String tnam = (ttsk.getName() != null ? ttsk.getName() : "");
-                String tcod = (ttsk.getCode() != null ? ttsk.getCode() : "");
-
-                tcnt++;
-
-                System.out.println("TASK-Name[" + tcnt + "]:" + tnam);
-                System.out.println("TASK-Code[" + tcnt + "]:" + tcod);
-
-                if(tnam.equals("Start Task")
-                        || tcod.equals("Step01")){
-                    rvws.put("Step01", ttsk);
-                    continue;
-                }
-                if(tnam.equals("Consolidator Review")
-                        || tcod.equals("Step03")){
-                    ccnt++;
-                    rvws.put("Step03_" + (ccnt <= 9 ? "0" : "") + ccnt, ttsk);
-                    continue;
-                }
-                if(tnam.equals("Cross checks & prepare transmittal")
-                        || tcod.equals("Step04")){
-                    rvws.put("Step04", ttsk);
-                    continue;
-                }
-            }
 
             System.out.println("Tested.");
 

@@ -6,21 +6,32 @@ import de.ser.doxis4.agentserver.UnifiedAgent;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class ReviewMailSend extends UnifiedAgent {
 
+    Logger log = LogManager.getLogger();
+    String uniqueId;
     ISession ses;
     IDocumentServer srv;
     IBpmService bpm;
     private ProcessHelper helper;
     @Override
     protected Object execute() {
+
+
         if (getEventTask() == null)
             return resultError("Null Document object");
+
+
 
         com.spire.license.LicenseProvider.setLicenseKey(Conf.Licences.SPIRE_XLS);
 
@@ -72,7 +83,7 @@ public class ReviewMailSend extends UnifiedAgent {
                 }
             }
 
-            String uniqueId = UUID.randomUUID().toString();
+            uniqueId = UUID.randomUUID().toString();
             Collection<ITask> tsks = proi.findTasks();
 
             JSONObject rvws = new JSONObject();
@@ -119,18 +130,19 @@ public class ReviewMailSend extends UnifiedAgent {
 
             JSONObject dbks = new JSONObject();
             long durd  = 0L;
-            double durh  = 0.0;
+            double durh  = 0.00;
             if(tend != null && tbgn != null) {
                 proi.setDescriptorValueTyped("ccmPrjProcStart", tbgn);
                 proi.setDescriptorValueTyped("ccmPrjProcFinish", tend);
 
                 long diff = (tend.getTime() > tbgn.getTime() ? tend.getTime() - tbgn.getTime() : tbgn.getTime() - tend.getTime());
                 durd = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-                durh = (TimeUnit.MINUTES.convert(diff, TimeUnit.MILLISECONDS) - (durd * 24 * 60)) / 60;
+                durh = (TimeUnit.MINUTES.convert(diff, TimeUnit.MILLISECONDS) - (durd * 24 * 60)) / 60d;
+                //durh = Double.valueOf((new DecimalFormat("#.##")).format(durh));
             }
 
             proi.setDescriptorValueTyped("ccmPrjProcDurDay", Integer.valueOf(durd + ""));
-            proi.setDescriptorValueTyped("ccmPrjProcDurHour", Double.valueOf(durh + ""));
+            proi.setDescriptorValueTyped("ccmPrjProcDurHour", durh );
 
             dbks.put("DurDay", durd + "");
             dbks.put("DurHour", durh + "");
@@ -265,6 +277,7 @@ public class ReviewMailSend extends UnifiedAgent {
 
             IDocument cdoc = (IDocument) Utils.getEngineeringCRS(mainDoc.getID(), helper);
             if(cdoc != null){
+                this.convertToPDF(cdoc);
                 ILink lnk2 = srv.createLink(ses, mainDoc.getID(), null, cdoc.getID());
                 lnk2.commit();
             }
@@ -289,10 +302,31 @@ public class ReviewMailSend extends UnifiedAgent {
             System.out.println("Exception       : " + e.getMessage());
             System.out.println("    Class       : " + e.getClass());
             System.out.println("    Stack-Trace : " + e.getStackTrace() );
-            return resultError("Exception : " + e.getMessage());
+
+            log.error ("Exception       : " + e.getMessage());
+            log.error ("    Class       : " + e.getClass());
+            log.error ("    Stack-Trace : " + e.getStackTrace().toString() );
+
+           return resultError("Exception : " + e.getMessage());
         }
 
         System.out.println("Finished");
         return resultSuccess("Ended successfully");
+    }
+
+    private void convertToPDF(IDocument doc) throws IOException {
+
+
+        String excelPath = Utils.exportDocument( doc , Conf.DocReviewPaths.MainPath , "CRS" + "[" + uniqueId + "]");
+
+        if( excelPath !="" ) {
+            log.info("Excel File Path For :" + uniqueId + " is " + excelPath);
+            String filePathPDF = Utils.convertExcelToPdf(excelPath, Conf.DocReviewPaths.MainPath + "/" + "CRS" + "[" + uniqueId + "].pdf");
+
+            doc.addRepresentation(".pdf", "PDF View").addPartDocument(filePathPDF);
+            doc.setDefaultRepresentation(doc.getRepresentationCount() - 1);
+            doc.commit();
+        }else
+            log.error("Excel File Path For :" + uniqueId + " is EMPTY" );
     }
 }

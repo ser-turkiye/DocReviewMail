@@ -195,6 +195,7 @@ public class Utils {
                 }
             };
         }
+        props.put("mail.mime.charset","UTF-8");
         Session session = (authenticator == null ? Session.getDefaultInstance(props) : Session.getDefaultInstance(props, authenticator));
 
         MimeMessage message = new MimeMessage(session);
@@ -206,7 +207,7 @@ public class Utils {
         Multipart multipart = new MimeMultipart("mixed");
 
         BodyPart htmlBodyPart = new MimeBodyPart();
-        htmlBodyPart.setContent(getFileContent(pars.getString("BodyHTMLFile")) , "text/html"); //5
+        htmlBodyPart.setContent(getFileContent(pars.getString("BodyHTMLFile")) , "text/html; charset=UTF-8"); //5
         multipart.addBodyPart(htmlBodyPart);
 
         String[] atchs = attachments.split("\\;");
