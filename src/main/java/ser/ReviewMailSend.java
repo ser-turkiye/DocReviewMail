@@ -137,8 +137,7 @@ public class ReviewMailSend extends UnifiedAgent {
 
                 long diff = (tend.getTime() > tbgn.getTime() ? tend.getTime() - tbgn.getTime() : tbgn.getTime() - tend.getTime());
                 durd = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-                durh = (TimeUnit.MINUTES.convert(diff, TimeUnit.MILLISECONDS) - (durd * 24 * 60)) / 60d;
-                //durh = Double.valueOf((new DecimalFormat("#.##")).format(durh));
+                durh = ((TimeUnit.MINUTES.convert(diff, TimeUnit.MILLISECONDS) - (durd * 24 * 60)) * 100 / 60) / 100d;
             }
 
             proi.setDescriptorValueTyped("ccmPrjProcDurDay", Integer.valueOf(durd + ""));

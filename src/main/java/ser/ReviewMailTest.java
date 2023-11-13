@@ -35,7 +35,7 @@ public class ReviewMailTest extends UnifiedAgent {
             this.helper = new ProcessHelper(ses);
             ITask task = getEventTask();
 
-            Date tbgn = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse("08/11/2023 14:11:00");
+            Date tbgn = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse("08/11/2023 14:15:00");
             Date tend = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse("01/11/2023 08:30:00");
 
             long durd  = 0L, diff = 0L;
@@ -43,8 +43,7 @@ public class ReviewMailTest extends UnifiedAgent {
             if(tend != null && tbgn != null) {
                 diff = (tend.getTime() > tbgn.getTime() ? tend.getTime() - tbgn.getTime() : tbgn.getTime() - tend.getTime());
                 durd = TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
-                durh = (TimeUnit.MINUTES.convert(diff, TimeUnit.MILLISECONDS) - (durd * 24 * 60)) / 60d;
-                durh = Double.valueOf((new DecimalFormat("#.##")).format(durh));
+                durh = ((TimeUnit.MINUTES.convert(diff, TimeUnit.MILLISECONDS) - (durd * 24 * 60)) * 100 / 60) / 100d;
             }
 
 
