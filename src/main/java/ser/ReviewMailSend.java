@@ -41,11 +41,11 @@ public class ReviewMailSend extends UnifiedAgent {
         try {
             this.helper = new ProcessHelper(ses);
             ITask task = getEventTask();
+            int cnt=5;
+            cnt++;
 
             (new File(Conf.DocReviewPaths.MainPath)).mkdir();
             IProcessInstance proi = task.getProcessInstance();
-
-
 
             String prjn = proi.getDescriptorValue(Conf.Descriptors.ProjectNo, String.class);
             if(prjn.isEmpty()){
