@@ -980,3 +980,344 @@
 2023-11-15 16:07:41 INFO  SessionRefreshTask:552 - session with id '298408cf-0d75-463c-b0ea-325bf25b95c2' removed as master session from SessionRefreshTask.
 2023-11-15 16:07:41 INFO  SEDNASpringContext:106 - closing "SEDNA Client Framework server-local context @ 2132092195" ...
 2023-11-15 16:07:41 INFO  SEDNASpringContext:106 - closing "SEDNA Client Framework Global Context @ 635965539" ...
+2023-11-15 17:41:21 INFO  DocumentServer:580 - Provided server names: 127.0.0.1
+2023-11-15 17:41:21 INFO  DocumentServer:581 - Provided ports: 8080
+2023-11-15 17:41:21 INFO  config:106 - Set SysDBName to: >system<
+2023-11-15 17:41:21 INFO  config:122 - Set TmpDir to: >C:/Logs<
+2023-11-15 17:41:21 INFO  config:42 - Set SeratioServerName to: >127.0.0.1<
+2023-11-15 17:41:21 INFO  config:47 - Set SeratioPort to: >8080<
+2023-11-15 17:41:21 INFO  config:58 - SeratioReadTimeout not set or not correct. Set default to:60
+2023-11-15 17:41:21 INFO  config:66 - SeratioLingerTime not set or not correct. Set default to:0
+2023-11-15 17:41:21 INFO  config:72 - MaxDescLenFix not set. Set default to : true
+2023-11-15 17:41:21 INFO  config:81 - FastSeratioInit not set. Set default to : false
+2023-11-15 17:41:21 INFO  config:93 - MaxSeratioConnections not set or not correct. Set default to:10
+2023-11-15 17:41:21 INFO  config:111 - Set ArchivServerName to: >127.0.0.1<
+2023-11-15 17:41:21 INFO  config:128 - Set ArchivPort to: >8080<
+2023-11-15 17:41:21 INFO  config:139 - MaxConnections not set or not correct. Set default to:10
+2023-11-15 17:41:21 INFO  config:147 - MaxDescLen not set or not correct. Set default to:250
+2023-11-15 17:41:21 INFO  config:155 - DefaultHitLimit not set or not correct. Set default to:0
+2023-11-15 17:41:21 INFO  config:163 - ArchiveReadTimeout not set or not correct. Set default to:60
+2023-11-15 17:41:21 INFO  config:171 - ArchiveLingerTime not set or not correct. Set default to:-1
+2023-11-15 17:41:21 INFO  config:176 - Set OperatorFix to: >0<
+2023-11-15 17:41:21 INFO  config:187 - MaxSizeDocIDQuery not set or not correct. Set default to:40
+2023-11-15 17:41:21 INFO  config:195 - MaxSizeBeforBufferRequest not set or not correct. Set default to:5242880
+2023-11-15 17:41:21 INFO  config:203 - FileLimit not set or not correct. Set default to:100000
+2023-11-15 17:41:21 INFO  config:210 - ValueDescriptorTransformation not set. Set default to : true
+2023-11-15 17:41:21 INFO  config:219 - GenericQuery not set. Set default to : false
+2023-11-15 17:41:21 INFO  config:228 - Ita423ORAFix not set. Set default to : false
+2023-11-15 17:41:21 INFO  config:237 - FileFDEShortFormatDescFix not set. Set default to : true
+2023-11-15 17:41:21 INFO  config:246 - ClassicAnnotations not set. Set default to : false
+2023-11-15 17:41:21 INFO  config:255 - EthFix not set. Set default to : false
+2023-11-15 17:41:21 INFO  config:264 - SessionReg not set. Set default to : true
+2023-11-15 17:41:21 INFO  config:274 - UseASSA not set. Set default to : true
+2023-11-15 17:41:21 INFO  config:284 - ExceptionForUnknownChar not set. Set default to : true
+2023-11-15 17:41:21 INFO  config:294 - ExceptionForEmptyPictureBox not set. Set default to : false
+2023-11-15 17:41:21 INFO  config:304 - SQLValueEscaping not set. Set default to : false
+2023-11-15 17:41:21 INFO  config:395 - ExceptionIsEmptyDesc not set. Set default to : false
+2023-11-15 17:41:21 INFO  config:461 - ClassicAnnotationKey not set. Set default to : T9700
+2023-11-15 17:41:21 INFO  config:514 - ItaErrorMsgFile not set. Set default to : null
+2023-11-15 17:41:21 INFO  config:42 - metaDataDefaultSourceClass not set. Set default to:de.serac.bluelineimpl.metadata.SWASeratioMetaDataSource
+2023-11-15 17:41:21 INFO  config:45 - Set metaDataDefaultSourceClass to:de.serac.bluelineimpl.metadata.SWASeratioMetaDataSource
+2023-11-15 17:41:21 INFO  config:58 - metaDataInit not set. Set default to:127.0.0.1:8080:system
+2023-11-15 17:41:21 INFO  config:61 - Set metaDataInit to:127.0.0.1:8080:system
+2023-11-15 17:41:21 INFO  config:75 - userCacheDisabled not set. Set default to:false
+2023-11-15 17:41:21 INFO  config:89 - FormIniFile not set. Set default to : null
+2023-11-15 17:41:21 INFO  config:47 - FormIniFile is set to:null
+2023-11-15 17:41:21 INFO  config:49 - PdfHostName is set to:null
+2023-11-15 17:41:21 INFO  config:51 - NewPdfExportFilter is:false
+2023-11-15 17:41:21 INFO  config:53 - UsePdflib3 is:3
+2023-11-15 17:41:21 INFO  config:55 - useThreadLocalPDFLib is:false
+2023-11-15 17:41:21 INFO  config:57 - HitListColors is set
+2023-11-15 17:41:21 INFO  config:59 - PdfProvider is:2
+2023-11-15 17:41:21 INFO  config:61 - FDEFormatMode is:0
+2023-11-15 17:41:21 INFO  config:63 - CreatePdfAnnotations is:true
+2023-11-15 17:41:21 INFO  config:65 - IgnoreEmptyFilesInPDF is:false
+2023-11-15 17:41:21 INFO  config:68 - CreateErrorPages is:true
+2023-11-15 17:41:21 INFO  config:78 - Doesn't use PDFHost.
+2023-11-15 17:41:21 INFO  filter:56 - UseXFilter is set to:true
+2023-11-15 17:41:21 INFO  trace:34 - ArchiveTrace not set. Set default to : false
+2023-11-15 17:41:21 INFO  trace:43 - ArchiveTraceDir not set->ArchiveTrace disabled
+2023-11-15 17:41:21 INFO  trace:57 - SeratioTrace not set. Set default to : false
+2023-11-15 17:41:21 INFO  trace:66 - SeratioTraceDir not set->SeratioTrace disabled
+2023-11-15 17:41:21 INFO  trace:80 - TraceFileExtension not set. Set default to : .trace
+2023-11-15 17:41:21 INFO  config:37 - No definition for Signaturemanager->Ignored.
+2023-11-15 17:41:24 INFO  PostProcessorRegistrationDelegate$BeanPostProcessorChecker:376 - Bean 'com.ser.sedna.clientimpl.util.SEDNAThreadFactory#5ec0b2a8' of type [com.ser.sedna.clientimpl.util.SEDNAThreadFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2023-11-15 17:41:24 INFO  PostProcessorRegistrationDelegate$BeanPostProcessorChecker:376 - Bean 'scheduler' of type [org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2023-11-15 17:41:25 INFO  SessionRefreshTask:659 - RefreshPeriod value is set to 60000ms.
+2023-11-15 17:41:25 INFO  SessionRefreshTask:675 - SessionRefreshFactor value is set to '0.4'.
+2023-11-15 17:41:25 INFO  SEDNASpringContext:161 - "SEDNA Client Framework Global Context @ 445489344" created
+2023-11-15 17:41:27 INFO  SEDNASpringContext:161 - "SEDNA Client Framework server-local context @ 621595086" created
+2023-11-15 17:41:29 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SessionService from class com.ser.sedna.services.transfer.xf.ws.SessionServiceWS
+2023-11-15 17:41:33 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SessionService from class com.ser.sedna.services.transfer.xf.ws.SessionServiceWS
+2023-11-15 17:41:34 INFO  SessionRefreshTask:496 - Session is master session. Session is added to SessionRefreshTask as master session.
+2023-11-15 17:41:34 INFO  SessionRefreshTask:496 - Session is master session. Session is added to SessionRefreshTask as master session.
+2023-11-15 17:41:34 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}OrgaService from class com.ser.sedna.services.transfer.xf.ws.OrgaServiceWS
+2023-11-15 17:41:34 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}OrgaService from class com.ser.sedna.services.transfer.xf.ws.OrgaServiceWS
+2023-11-15 17:41:35 INFO  CacheRefreshTask:884 - CacheRefreshMode value is set to CLEANUP_AND_REFRESH.
+2023-11-15 17:41:35 INFO  CacheRefreshTask:900 - RefreshPeriod value is set to 300000ms (05:00 min)
+2023-11-15 17:41:37 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}AdministrationService from class com.ser.sedna.services.transfer.xf.ws.AdministrationServiceWS
+2023-11-15 17:41:37 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}DocumentService from class com.ser.sedna.services.transfer.xf.ws.DocumentServiceWS
+2023-11-15 17:41:39 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SchemaService from class com.ser.sedna.services.transfer.xf.ws.SchemaServiceWS
+2023-11-15 17:41:40 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}BpmService from class com.ser.sedna.services.transfer.xf.ws.BpmServiceWS
+2023-11-15 17:41:42 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}FederationService from class com.ser.sedna.services.transfer.xf.ws.FederationServiceWS
+2023-11-15 17:41:43 INFO  QueryParameter:559 - SELECT * FROM PRJ_FOLDER WHERE TYPE = '32e74338-d268-484d-99b0-f90187240549' AND CCMPRJCARD_CODE = 'PRJ_004' limit 1;
+2023-11-15 17:41:43 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SearchService from class com.ser.sedna.services.transfer.xf.ws.SearchServiceWS
+2023-11-15 17:41:44 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}RelationshipService from class com.ser.sedna.services.transfer.xf.ws.RelationshipServiceWS
+2023-11-15 17:41:46 INFO  QueryParameter:561 - SELECT * FROM BPM WHERE TYPE = '629a28c4-6c36-44d0-90f7-1e5802f038e8' AND MAINTASKREFERENCE = 'SP03BPM2468adde1f-e6b8-465c-a995-c91926c9ad07182023-11-15T11:48:35.582Z00';
+2023-11-15 17:41:46 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}ApplicationMetaDataServiceManagement from class com.ser.sedna.services.transfer.xf.ws.ApplicationMetaDataServiceManagementWS
+2023-11-15 17:41:47 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}ApplicationMetaDataService from class com.ser.sedna.services.transfer.xf.ws.ApplicationMetaDataServiceWS
+2023-11-15 17:41:47 INFO  QueryParameter:559 - SELECT * FROM D_QCON WHERE TYPE = 'b9cf43d1-a4d3-482f-9806-44ae64c6139d' AND CCMPRJCARD_CODE = 'PRJ_004' AND OBJECTNUMBER2 = 'DOC_REVIEW_MAIL' limit 1;
+2023-11-15 17:41:47 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SecurityService from class com.ser.sedna.services.transfer.xf.ws.SecurityServiceWS
+2023-11-15 17:41:49 INFO  SystemPermissionMapping:63 - optional permission not found: editProcessInstance
+2023-11-15 17:41:49 INFO  SystemPermissionMapping:63 - optional permission not found: createProcessInstance
+2023-11-15 17:41:49 INFO  SystemPermissionMapping:63 - optional permission not found: deleteProcessInstance
+2023-11-15 17:41:49 INFO  SystemPermissionMapping:63 - optional permission not found: createDocRef
+2023-11-15 17:41:49 INFO  SystemPermissionMapping:63 - optional permission not found: deleteDocRef
+2023-11-15 17:41:49 INFO  SystemPermissionMapping:63 - optional permission not found: changeWfCreationContext
+2023-11-15 17:41:49 INFO  SystemPermissionMapping:63 - optional permission not found: adhocProcessInstance
+2023-11-15 17:41:49 INFO  SystemPermissionMapping:63 - optional permission not found: changeWorkbasketMembers
+2023-11-15 17:41:49 INFO  SystemPermissionMapping:63 - optional permission not found: changeWorkbasketAbsence
+2023-11-15 17:41:49 INFO  SystemPermissionMapping:63 - optional permission not found: createPersonalWorkbasket
+2023-11-15 17:41:49 INFO  SystemPermissionMapping:63 - optional permission not found: createSharedWorkbasket
+2023-11-15 17:41:49 INFO  SystemPermissionMapping:63 - optional permission not found: performWfQuery
+2023-11-15 17:41:49 INFO  SystemPermissionMapping:63 - optional permission not found: changeDescriptorDefinitions
+2023-11-15 17:41:49 INFO  SystemPermissionMapping:63 - optional permission not found: designGlobalAdhocTempl
+2023-11-15 17:41:49 INFO  SystemPermissionMapping:63 - optional permission not found: designPrivateAdhocTempl
+2023-11-15 17:41:49 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SecurityServiceManagement from class com.ser.sedna.services.transfer.xf.ws.SecurityServiceManagementWS
+2023-11-15 17:41:50 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}AuditTrailService from class com.ser.sedna.services.transfer.xf.ws.AuditTrailServiceWS
+2023-11-15 17:42:02 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}CounterService from class com.ser.sedna.services.transfer.xf.ws.CounterServiceWS
+2023-11-15 17:42:05 INFO  QueryParameter:559 - SELECT * FROM PRJ_CRS WHERE TYPE = '3e1fe7b3-3e86-4910-8155-c29b662e71d6' AND CCMPRJDOCDOCTYPE = 'CRS' AND CCMREFERENCENUMBER = 'SD07PRJ_DOC249042d5e6-6f2f-4742-a542-54a6e9f2ef41182023-11-15T11:40:26.495Z011' limit 1;
+2023-11-15 17:42:05 INFO  SEDNASessionImpl:130 - Session with id '5f8bb56c-37ba-4a15-ad87-31da92bccad4' is invalidated.
+2023-11-15 17:42:05 INFO  SEDNASessionImpl:130 - Session with id 'db05ed1e-e0d9-4e36-b08a-1baf49acafb3' is invalidated.
+2023-11-15 17:42:05 INFO  SessionRefreshTask:552 - session with id '5f8bb56c-37ba-4a15-ad87-31da92bccad4' removed as master session from SessionRefreshTask.
+2023-11-15 17:42:05 INFO  SessionRefreshTask:552 - session with id 'db05ed1e-e0d9-4e36-b08a-1baf49acafb3' removed as master session from SessionRefreshTask.
+2023-11-15 17:42:05 INFO  SEDNASpringContext:106 - closing "SEDNA Client Framework server-local context @ 621595086" ...
+2023-11-15 17:42:05 INFO  SEDNASpringContext:106 - closing "SEDNA Client Framework Global Context @ 445489344" ...
+2023-11-15 17:51:59 INFO  DocumentServer:580 - Provided server names: 127.0.0.1
+2023-11-15 17:51:59 INFO  DocumentServer:581 - Provided ports: 8080
+2023-11-15 17:51:59 INFO  config:106 - Set SysDBName to: >system<
+2023-11-15 17:51:59 INFO  config:122 - Set TmpDir to: >C:/Logs<
+2023-11-15 17:51:59 INFO  config:42 - Set SeratioServerName to: >127.0.0.1<
+2023-11-15 17:51:59 INFO  config:47 - Set SeratioPort to: >8080<
+2023-11-15 17:51:59 INFO  config:58 - SeratioReadTimeout not set or not correct. Set default to:60
+2023-11-15 17:51:59 INFO  config:66 - SeratioLingerTime not set or not correct. Set default to:0
+2023-11-15 17:51:59 INFO  config:72 - MaxDescLenFix not set. Set default to : true
+2023-11-15 17:51:59 INFO  config:81 - FastSeratioInit not set. Set default to : false
+2023-11-15 17:51:59 INFO  config:93 - MaxSeratioConnections not set or not correct. Set default to:10
+2023-11-15 17:51:59 INFO  config:111 - Set ArchivServerName to: >127.0.0.1<
+2023-11-15 17:51:59 INFO  config:128 - Set ArchivPort to: >8080<
+2023-11-15 17:51:59 INFO  config:139 - MaxConnections not set or not correct. Set default to:10
+2023-11-15 17:51:59 INFO  config:147 - MaxDescLen not set or not correct. Set default to:250
+2023-11-15 17:51:59 INFO  config:155 - DefaultHitLimit not set or not correct. Set default to:0
+2023-11-15 17:51:59 INFO  config:163 - ArchiveReadTimeout not set or not correct. Set default to:60
+2023-11-15 17:51:59 INFO  config:171 - ArchiveLingerTime not set or not correct. Set default to:-1
+2023-11-15 17:51:59 INFO  config:176 - Set OperatorFix to: >0<
+2023-11-15 17:51:59 INFO  config:187 - MaxSizeDocIDQuery not set or not correct. Set default to:40
+2023-11-15 17:51:59 INFO  config:195 - MaxSizeBeforBufferRequest not set or not correct. Set default to:5242880
+2023-11-15 17:51:59 INFO  config:203 - FileLimit not set or not correct. Set default to:100000
+2023-11-15 17:51:59 INFO  config:210 - ValueDescriptorTransformation not set. Set default to : true
+2023-11-15 17:51:59 INFO  config:219 - GenericQuery not set. Set default to : false
+2023-11-15 17:51:59 INFO  config:228 - Ita423ORAFix not set. Set default to : false
+2023-11-15 17:51:59 INFO  config:237 - FileFDEShortFormatDescFix not set. Set default to : true
+2023-11-15 17:51:59 INFO  config:246 - ClassicAnnotations not set. Set default to : false
+2023-11-15 17:51:59 INFO  config:255 - EthFix not set. Set default to : false
+2023-11-15 17:51:59 INFO  config:264 - SessionReg not set. Set default to : true
+2023-11-15 17:51:59 INFO  config:274 - UseASSA not set. Set default to : true
+2023-11-15 17:51:59 INFO  config:284 - ExceptionForUnknownChar not set. Set default to : true
+2023-11-15 17:51:59 INFO  config:294 - ExceptionForEmptyPictureBox not set. Set default to : false
+2023-11-15 17:51:59 INFO  config:304 - SQLValueEscaping not set. Set default to : false
+2023-11-15 17:51:59 INFO  config:395 - ExceptionIsEmptyDesc not set. Set default to : false
+2023-11-15 17:51:59 INFO  config:461 - ClassicAnnotationKey not set. Set default to : T9700
+2023-11-15 17:51:59 INFO  config:514 - ItaErrorMsgFile not set. Set default to : null
+2023-11-15 17:51:59 INFO  config:42 - metaDataDefaultSourceClass not set. Set default to:de.serac.bluelineimpl.metadata.SWASeratioMetaDataSource
+2023-11-15 17:51:59 INFO  config:45 - Set metaDataDefaultSourceClass to:de.serac.bluelineimpl.metadata.SWASeratioMetaDataSource
+2023-11-15 17:51:59 INFO  config:58 - metaDataInit not set. Set default to:127.0.0.1:8080:system
+2023-11-15 17:51:59 INFO  config:61 - Set metaDataInit to:127.0.0.1:8080:system
+2023-11-15 17:51:59 INFO  config:75 - userCacheDisabled not set. Set default to:false
+2023-11-15 17:51:59 INFO  config:89 - FormIniFile not set. Set default to : null
+2023-11-15 17:51:59 INFO  config:47 - FormIniFile is set to:null
+2023-11-15 17:51:59 INFO  config:49 - PdfHostName is set to:null
+2023-11-15 17:51:59 INFO  config:51 - NewPdfExportFilter is:false
+2023-11-15 17:51:59 INFO  config:53 - UsePdflib3 is:3
+2023-11-15 17:51:59 INFO  config:55 - useThreadLocalPDFLib is:false
+2023-11-15 17:51:59 INFO  config:57 - HitListColors is set
+2023-11-15 17:51:59 INFO  config:59 - PdfProvider is:2
+2023-11-15 17:51:59 INFO  config:61 - FDEFormatMode is:0
+2023-11-15 17:51:59 INFO  config:63 - CreatePdfAnnotations is:true
+2023-11-15 17:51:59 INFO  config:65 - IgnoreEmptyFilesInPDF is:false
+2023-11-15 17:51:59 INFO  config:68 - CreateErrorPages is:true
+2023-11-15 17:51:59 INFO  config:78 - Doesn't use PDFHost.
+2023-11-15 17:51:59 INFO  filter:56 - UseXFilter is set to:true
+2023-11-15 17:51:59 INFO  trace:34 - ArchiveTrace not set. Set default to : false
+2023-11-15 17:51:59 INFO  trace:43 - ArchiveTraceDir not set->ArchiveTrace disabled
+2023-11-15 17:51:59 INFO  trace:57 - SeratioTrace not set. Set default to : false
+2023-11-15 17:51:59 INFO  trace:66 - SeratioTraceDir not set->SeratioTrace disabled
+2023-11-15 17:51:59 INFO  trace:80 - TraceFileExtension not set. Set default to : .trace
+2023-11-15 17:51:59 INFO  config:37 - No definition for Signaturemanager->Ignored.
+2023-11-15 17:52:03 INFO  PostProcessorRegistrationDelegate$BeanPostProcessorChecker:376 - Bean 'com.ser.sedna.clientimpl.util.SEDNAThreadFactory#5ec0b2a8' of type [com.ser.sedna.clientimpl.util.SEDNAThreadFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2023-11-15 17:52:03 INFO  PostProcessorRegistrationDelegate$BeanPostProcessorChecker:376 - Bean 'scheduler' of type [org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2023-11-15 17:52:03 INFO  SessionRefreshTask:659 - RefreshPeriod value is set to 60000ms.
+2023-11-15 17:52:03 INFO  SessionRefreshTask:675 - SessionRefreshFactor value is set to '0.4'.
+2023-11-15 17:52:04 INFO  SEDNASpringContext:161 - "SEDNA Client Framework Global Context @ 445489344" created
+2023-11-15 17:52:06 INFO  SEDNASpringContext:161 - "SEDNA Client Framework server-local context @ 621595086" created
+2023-11-15 17:52:08 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SessionService from class com.ser.sedna.services.transfer.xf.ws.SessionServiceWS
+2023-11-15 17:52:12 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SessionService from class com.ser.sedna.services.transfer.xf.ws.SessionServiceWS
+2023-11-15 17:52:13 INFO  SessionRefreshTask:496 - Session is master session. Session is added to SessionRefreshTask as master session.
+2023-11-15 17:52:13 INFO  SessionRefreshTask:496 - Session is master session. Session is added to SessionRefreshTask as master session.
+2023-11-15 17:52:13 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}OrgaService from class com.ser.sedna.services.transfer.xf.ws.OrgaServiceWS
+2023-11-15 17:52:13 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}OrgaService from class com.ser.sedna.services.transfer.xf.ws.OrgaServiceWS
+2023-11-15 17:52:14 INFO  CacheRefreshTask:884 - CacheRefreshMode value is set to CLEANUP_AND_REFRESH.
+2023-11-15 17:52:14 INFO  CacheRefreshTask:900 - RefreshPeriod value is set to 300000ms (05:00 min)
+2023-11-15 17:52:15 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}AdministrationService from class com.ser.sedna.services.transfer.xf.ws.AdministrationServiceWS
+2023-11-15 17:52:16 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}DocumentService from class com.ser.sedna.services.transfer.xf.ws.DocumentServiceWS
+2023-11-15 17:52:17 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SchemaService from class com.ser.sedna.services.transfer.xf.ws.SchemaServiceWS
+2023-11-15 17:52:18 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}BpmService from class com.ser.sedna.services.transfer.xf.ws.BpmServiceWS
+2023-11-15 17:52:20 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}FederationService from class com.ser.sedna.services.transfer.xf.ws.FederationServiceWS
+2023-11-15 17:52:21 INFO  QueryParameter:559 - SELECT * FROM PRJ_FOLDER WHERE TYPE = '32e74338-d268-484d-99b0-f90187240549' AND CCMPRJCARD_CODE = 'PRJ_004' limit 1;
+2023-11-15 17:52:21 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SearchService from class com.ser.sedna.services.transfer.xf.ws.SearchServiceWS
+2023-11-15 17:52:23 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}RelationshipService from class com.ser.sedna.services.transfer.xf.ws.RelationshipServiceWS
+2023-11-15 17:52:24 INFO  QueryParameter:561 - SELECT * FROM BPM WHERE TYPE = '629a28c4-6c36-44d0-90f7-1e5802f038e8' AND MAINTASKREFERENCE = 'SP03BPM24f9fddb27-16e8-4224-b1b1-7280e4627f5e182023-11-15T14:43:21.111Z00';
+2023-11-15 17:52:25 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}ApplicationMetaDataServiceManagement from class com.ser.sedna.services.transfer.xf.ws.ApplicationMetaDataServiceManagementWS
+2023-11-15 17:52:25 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}ApplicationMetaDataService from class com.ser.sedna.services.transfer.xf.ws.ApplicationMetaDataServiceWS
+2023-11-15 17:52:26 INFO  QueryParameter:559 - SELECT * FROM D_QCON WHERE TYPE = 'b9cf43d1-a4d3-482f-9806-44ae64c6139d' AND CCMPRJCARD_CODE = 'PRJ_004' AND OBJECTNUMBER2 = 'DOC_REVIEW_MAIL' limit 1;
+2023-11-15 17:52:26 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SecurityService from class com.ser.sedna.services.transfer.xf.ws.SecurityServiceWS
+2023-11-15 17:52:27 INFO  SystemPermissionMapping:63 - optional permission not found: editProcessInstance
+2023-11-15 17:52:27 INFO  SystemPermissionMapping:63 - optional permission not found: createProcessInstance
+2023-11-15 17:52:27 INFO  SystemPermissionMapping:63 - optional permission not found: deleteProcessInstance
+2023-11-15 17:52:27 INFO  SystemPermissionMapping:63 - optional permission not found: createDocRef
+2023-11-15 17:52:27 INFO  SystemPermissionMapping:63 - optional permission not found: deleteDocRef
+2023-11-15 17:52:27 INFO  SystemPermissionMapping:63 - optional permission not found: changeWfCreationContext
+2023-11-15 17:52:27 INFO  SystemPermissionMapping:63 - optional permission not found: adhocProcessInstance
+2023-11-15 17:52:27 INFO  SystemPermissionMapping:63 - optional permission not found: changeWorkbasketMembers
+2023-11-15 17:52:27 INFO  SystemPermissionMapping:63 - optional permission not found: changeWorkbasketAbsence
+2023-11-15 17:52:27 INFO  SystemPermissionMapping:63 - optional permission not found: createPersonalWorkbasket
+2023-11-15 17:52:27 INFO  SystemPermissionMapping:63 - optional permission not found: createSharedWorkbasket
+2023-11-15 17:52:27 INFO  SystemPermissionMapping:63 - optional permission not found: performWfQuery
+2023-11-15 17:52:27 INFO  SystemPermissionMapping:63 - optional permission not found: changeDescriptorDefinitions
+2023-11-15 17:52:27 INFO  SystemPermissionMapping:63 - optional permission not found: designGlobalAdhocTempl
+2023-11-15 17:52:27 INFO  SystemPermissionMapping:63 - optional permission not found: designPrivateAdhocTempl
+2023-11-15 17:52:28 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SecurityServiceManagement from class com.ser.sedna.services.transfer.xf.ws.SecurityServiceManagementWS
+2023-11-15 17:52:28 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}AuditTrailService from class com.ser.sedna.services.transfer.xf.ws.AuditTrailServiceWS
+2023-11-15 17:52:39 INFO  QueryParameter:561 - SELECT * FROM PRJ_CRS WHERE TYPE = '3e1fe7b3-3e86-4910-8155-c29b662e71d6' AND MAINDOCUMENTREFERENCE = 'SD07PRJ_DOC2438edc970-8c57-41b9-85d7-eecc10a8f562182023-11-15T11:40:27.127Z011' AND CCMPRJDOCDOCTYPE = 'History';
+2023-11-15 17:52:40 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}CounterService from class com.ser.sedna.services.transfer.xf.ws.CounterServiceWS
+2023-11-15 17:52:42 INFO  QueryParameter:559 - SELECT * FROM PRJ_CRS WHERE TYPE = '3e1fe7b3-3e86-4910-8155-c29b662e71d6' AND CCMPRJDOCDOCTYPE = 'CRS' AND CCMREFERENCENUMBER = 'SD07PRJ_DOC2438edc970-8c57-41b9-85d7-eecc10a8f562182023-11-15T11:40:27.127Z011' limit 1;
+2023-11-15 17:52:43 INFO  SEDNASessionImpl:130 - Session with id 'cab98a69-d977-450e-b0fa-d21b811482c2' is invalidated.
+2023-11-15 17:52:43 INFO  SEDNASessionImpl:130 - Session with id 'a60e6d08-5ad4-471a-962c-05f21020291f' is invalidated.
+2023-11-15 17:52:43 INFO  SessionRefreshTask:552 - session with id 'cab98a69-d977-450e-b0fa-d21b811482c2' removed as master session from SessionRefreshTask.
+2023-11-15 17:52:43 INFO  SessionRefreshTask:552 - session with id 'a60e6d08-5ad4-471a-962c-05f21020291f' removed as master session from SessionRefreshTask.
+2023-11-15 17:52:43 INFO  SEDNASpringContext:106 - closing "SEDNA Client Framework server-local context @ 621595086" ...
+2023-11-15 17:52:43 INFO  SEDNASpringContext:106 - closing "SEDNA Client Framework Global Context @ 445489344" ...
+2023-11-15 17:55:13 INFO  DocumentServer:580 - Provided server names: 127.0.0.1
+2023-11-15 17:55:13 INFO  DocumentServer:581 - Provided ports: 8080
+2023-11-15 17:55:13 INFO  config:106 - Set SysDBName to: >system<
+2023-11-15 17:55:13 INFO  config:122 - Set TmpDir to: >C:/Logs<
+2023-11-15 17:55:13 INFO  config:42 - Set SeratioServerName to: >127.0.0.1<
+2023-11-15 17:55:13 INFO  config:47 - Set SeratioPort to: >8080<
+2023-11-15 17:55:13 INFO  config:58 - SeratioReadTimeout not set or not correct. Set default to:60
+2023-11-15 17:55:13 INFO  config:66 - SeratioLingerTime not set or not correct. Set default to:0
+2023-11-15 17:55:13 INFO  config:72 - MaxDescLenFix not set. Set default to : true
+2023-11-15 17:55:13 INFO  config:81 - FastSeratioInit not set. Set default to : false
+2023-11-15 17:55:13 INFO  config:93 - MaxSeratioConnections not set or not correct. Set default to:10
+2023-11-15 17:55:13 INFO  config:111 - Set ArchivServerName to: >127.0.0.1<
+2023-11-15 17:55:13 INFO  config:128 - Set ArchivPort to: >8080<
+2023-11-15 17:55:13 INFO  config:139 - MaxConnections not set or not correct. Set default to:10
+2023-11-15 17:55:13 INFO  config:147 - MaxDescLen not set or not correct. Set default to:250
+2023-11-15 17:55:13 INFO  config:155 - DefaultHitLimit not set or not correct. Set default to:0
+2023-11-15 17:55:13 INFO  config:163 - ArchiveReadTimeout not set or not correct. Set default to:60
+2023-11-15 17:55:13 INFO  config:171 - ArchiveLingerTime not set or not correct. Set default to:-1
+2023-11-15 17:55:13 INFO  config:176 - Set OperatorFix to: >0<
+2023-11-15 17:55:13 INFO  config:187 - MaxSizeDocIDQuery not set or not correct. Set default to:40
+2023-11-15 17:55:13 INFO  config:195 - MaxSizeBeforBufferRequest not set or not correct. Set default to:5242880
+2023-11-15 17:55:13 INFO  config:203 - FileLimit not set or not correct. Set default to:100000
+2023-11-15 17:55:13 INFO  config:210 - ValueDescriptorTransformation not set. Set default to : true
+2023-11-15 17:55:13 INFO  config:219 - GenericQuery not set. Set default to : false
+2023-11-15 17:55:13 INFO  config:228 - Ita423ORAFix not set. Set default to : false
+2023-11-15 17:55:13 INFO  config:237 - FileFDEShortFormatDescFix not set. Set default to : true
+2023-11-15 17:55:13 INFO  config:246 - ClassicAnnotations not set. Set default to : false
+2023-11-15 17:55:13 INFO  config:255 - EthFix not set. Set default to : false
+2023-11-15 17:55:13 INFO  config:264 - SessionReg not set. Set default to : true
+2023-11-15 17:55:13 INFO  config:274 - UseASSA not set. Set default to : true
+2023-11-15 17:55:13 INFO  config:284 - ExceptionForUnknownChar not set. Set default to : true
+2023-11-15 17:55:13 INFO  config:294 - ExceptionForEmptyPictureBox not set. Set default to : false
+2023-11-15 17:55:13 INFO  config:304 - SQLValueEscaping not set. Set default to : false
+2023-11-15 17:55:13 INFO  config:395 - ExceptionIsEmptyDesc not set. Set default to : false
+2023-11-15 17:55:13 INFO  config:461 - ClassicAnnotationKey not set. Set default to : T9700
+2023-11-15 17:55:13 INFO  config:514 - ItaErrorMsgFile not set. Set default to : null
+2023-11-15 17:55:13 INFO  config:42 - metaDataDefaultSourceClass not set. Set default to:de.serac.bluelineimpl.metadata.SWASeratioMetaDataSource
+2023-11-15 17:55:13 INFO  config:45 - Set metaDataDefaultSourceClass to:de.serac.bluelineimpl.metadata.SWASeratioMetaDataSource
+2023-11-15 17:55:13 INFO  config:58 - metaDataInit not set. Set default to:127.0.0.1:8080:system
+2023-11-15 17:55:13 INFO  config:61 - Set metaDataInit to:127.0.0.1:8080:system
+2023-11-15 17:55:13 INFO  config:75 - userCacheDisabled not set. Set default to:false
+2023-11-15 17:55:13 INFO  config:89 - FormIniFile not set. Set default to : null
+2023-11-15 17:55:13 INFO  config:47 - FormIniFile is set to:null
+2023-11-15 17:55:13 INFO  config:49 - PdfHostName is set to:null
+2023-11-15 17:55:13 INFO  config:51 - NewPdfExportFilter is:false
+2023-11-15 17:55:13 INFO  config:53 - UsePdflib3 is:3
+2023-11-15 17:55:13 INFO  config:55 - useThreadLocalPDFLib is:false
+2023-11-15 17:55:13 INFO  config:57 - HitListColors is set
+2023-11-15 17:55:13 INFO  config:59 - PdfProvider is:2
+2023-11-15 17:55:13 INFO  config:61 - FDEFormatMode is:0
+2023-11-15 17:55:14 INFO  config:63 - CreatePdfAnnotations is:true
+2023-11-15 17:55:14 INFO  config:65 - IgnoreEmptyFilesInPDF is:false
+2023-11-15 17:55:14 INFO  config:68 - CreateErrorPages is:true
+2023-11-15 17:55:14 INFO  config:78 - Doesn't use PDFHost.
+2023-11-15 17:55:14 INFO  filter:56 - UseXFilter is set to:true
+2023-11-15 17:55:14 INFO  trace:34 - ArchiveTrace not set. Set default to : false
+2023-11-15 17:55:14 INFO  trace:43 - ArchiveTraceDir not set->ArchiveTrace disabled
+2023-11-15 17:55:14 INFO  trace:57 - SeratioTrace not set. Set default to : false
+2023-11-15 17:55:14 INFO  trace:66 - SeratioTraceDir not set->SeratioTrace disabled
+2023-11-15 17:55:14 INFO  trace:80 - TraceFileExtension not set. Set default to : .trace
+2023-11-15 17:55:14 INFO  config:37 - No definition for Signaturemanager->Ignored.
+2023-11-15 17:55:17 INFO  PostProcessorRegistrationDelegate$BeanPostProcessorChecker:376 - Bean 'com.ser.sedna.clientimpl.util.SEDNAThreadFactory#5ec0b2a8' of type [com.ser.sedna.clientimpl.util.SEDNAThreadFactory] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2023-11-15 17:55:17 INFO  PostProcessorRegistrationDelegate$BeanPostProcessorChecker:376 - Bean 'scheduler' of type [org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2023-11-15 17:55:18 INFO  SessionRefreshTask:659 - RefreshPeriod value is set to 60000ms.
+2023-11-15 17:55:18 INFO  SessionRefreshTask:675 - SessionRefreshFactor value is set to '0.4'.
+2023-11-15 17:55:18 INFO  SEDNASpringContext:161 - "SEDNA Client Framework Global Context @ 445489344" created
+2023-11-15 17:55:20 INFO  SEDNASpringContext:161 - "SEDNA Client Framework server-local context @ 621595086" created
+2023-11-15 17:55:22 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SessionService from class com.ser.sedna.services.transfer.xf.ws.SessionServiceWS
+2023-11-15 17:55:25 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SessionService from class com.ser.sedna.services.transfer.xf.ws.SessionServiceWS
+2023-11-15 17:55:26 INFO  SessionRefreshTask:496 - Session is master session. Session is added to SessionRefreshTask as master session.
+2023-11-15 17:55:26 INFO  SessionRefreshTask:496 - Session is master session. Session is added to SessionRefreshTask as master session.
+2023-11-15 17:55:26 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}OrgaService from class com.ser.sedna.services.transfer.xf.ws.OrgaServiceWS
+2023-11-15 17:55:26 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}OrgaService from class com.ser.sedna.services.transfer.xf.ws.OrgaServiceWS
+2023-11-15 17:55:27 INFO  CacheRefreshTask:884 - CacheRefreshMode value is set to CLEANUP_AND_REFRESH.
+2023-11-15 17:55:27 INFO  CacheRefreshTask:900 - RefreshPeriod value is set to 300000ms (05:00 min)
+2023-11-15 17:55:29 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}AdministrationService from class com.ser.sedna.services.transfer.xf.ws.AdministrationServiceWS
+2023-11-15 17:55:29 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}DocumentService from class com.ser.sedna.services.transfer.xf.ws.DocumentServiceWS
+2023-11-15 17:55:32 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SchemaService from class com.ser.sedna.services.transfer.xf.ws.SchemaServiceWS
+2023-11-15 17:55:34 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}BpmService from class com.ser.sedna.services.transfer.xf.ws.BpmServiceWS
+2023-11-15 17:55:36 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}FederationService from class com.ser.sedna.services.transfer.xf.ws.FederationServiceWS
+2023-11-15 17:55:37 INFO  QueryParameter:559 - SELECT * FROM PRJ_FOLDER WHERE TYPE = '32e74338-d268-484d-99b0-f90187240549' AND CCMPRJCARD_CODE = 'PRJ_004' limit 1;
+2023-11-15 17:55:37 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SearchService from class com.ser.sedna.services.transfer.xf.ws.SearchServiceWS
+2023-11-15 17:55:39 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}RelationshipService from class com.ser.sedna.services.transfer.xf.ws.RelationshipServiceWS
+2023-11-15 17:55:40 INFO  QueryParameter:561 - SELECT * FROM BPM WHERE TYPE = '629a28c4-6c36-44d0-90f7-1e5802f038e8' AND MAINTASKREFERENCE = 'SP03BPM24f9fddb27-16e8-4224-b1b1-7280e4627f5e182023-11-15T14:43:21.111Z00';
+2023-11-15 17:55:41 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}ApplicationMetaDataServiceManagement from class com.ser.sedna.services.transfer.xf.ws.ApplicationMetaDataServiceManagementWS
+2023-11-15 17:55:41 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}ApplicationMetaDataService from class com.ser.sedna.services.transfer.xf.ws.ApplicationMetaDataServiceWS
+2023-11-15 17:55:42 INFO  QueryParameter:559 - SELECT * FROM D_QCON WHERE TYPE = 'b9cf43d1-a4d3-482f-9806-44ae64c6139d' AND CCMPRJCARD_CODE = 'PRJ_004' AND OBJECTNUMBER2 = 'DOC_REVIEW_MAIL' limit 1;
+2023-11-15 17:55:42 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SecurityService from class com.ser.sedna.services.transfer.xf.ws.SecurityServiceWS
+2023-11-15 17:55:43 INFO  SystemPermissionMapping:63 - optional permission not found: editProcessInstance
+2023-11-15 17:55:43 INFO  SystemPermissionMapping:63 - optional permission not found: createProcessInstance
+2023-11-15 17:55:43 INFO  SystemPermissionMapping:63 - optional permission not found: deleteProcessInstance
+2023-11-15 17:55:43 INFO  SystemPermissionMapping:63 - optional permission not found: createDocRef
+2023-11-15 17:55:43 INFO  SystemPermissionMapping:63 - optional permission not found: deleteDocRef
+2023-11-15 17:55:43 INFO  SystemPermissionMapping:63 - optional permission not found: changeWfCreationContext
+2023-11-15 17:55:43 INFO  SystemPermissionMapping:63 - optional permission not found: adhocProcessInstance
+2023-11-15 17:55:43 INFO  SystemPermissionMapping:63 - optional permission not found: changeWorkbasketMembers
+2023-11-15 17:55:43 INFO  SystemPermissionMapping:63 - optional permission not found: changeWorkbasketAbsence
+2023-11-15 17:55:43 INFO  SystemPermissionMapping:63 - optional permission not found: createPersonalWorkbasket
+2023-11-15 17:55:43 INFO  SystemPermissionMapping:63 - optional permission not found: createSharedWorkbasket
+2023-11-15 17:55:43 INFO  SystemPermissionMapping:63 - optional permission not found: performWfQuery
+2023-11-15 17:55:43 INFO  SystemPermissionMapping:63 - optional permission not found: changeDescriptorDefinitions
+2023-11-15 17:55:43 INFO  SystemPermissionMapping:63 - optional permission not found: designGlobalAdhocTempl
+2023-11-15 17:55:43 INFO  SystemPermissionMapping:63 - optional permission not found: designPrivateAdhocTempl
+2023-11-15 17:55:43 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}SecurityServiceManagement from class com.ser.sedna.services.transfer.xf.ws.SecurityServiceManagementWS
+2023-11-15 17:55:44 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}AuditTrailService from class com.ser.sedna.services.transfer.xf.ws.AuditTrailServiceWS
+2023-11-15 17:55:56 INFO  QueryParameter:561 - SELECT * FROM PRJ_CRS WHERE TYPE = '3e1fe7b3-3e86-4910-8155-c29b662e71d6' AND MAINDOCUMENTREFERENCE = 'SD07PRJ_DOC2438edc970-8c57-41b9-85d7-eecc10a8f562182023-11-15T11:40:27.127Z011' AND CCMPRJDOCDOCTYPE = 'History';
+2023-11-15 17:55:56 INFO  ReflectionServiceFactoryBean:130 - Creating Service {http://types.xf.transfer.services.sedna.ser.com}CounterService from class com.ser.sedna.services.transfer.xf.ws.CounterServiceWS
+2023-11-15 17:55:59 INFO  QueryParameter:559 - SELECT * FROM PRJ_CRS WHERE TYPE = '3e1fe7b3-3e86-4910-8155-c29b662e71d6' AND CCMPRJDOCDOCTYPE = 'CRS' AND CCMREFERENCENUMBER = 'SD07PRJ_DOC2438edc970-8c57-41b9-85d7-eecc10a8f562182023-11-15T11:40:27.127Z011' limit 1;
+2023-11-15 17:55:59 INFO  SEDNASessionImpl:130 - Session with id 'e4cd9ad5-6465-428d-ad29-b3211b375faf' is invalidated.
+2023-11-15 17:55:59 INFO  SEDNASessionImpl:130 - Session with id '93c75620-4b46-4d6c-82b7-4d009a51fc29' is invalidated.
+2023-11-15 17:55:59 INFO  SessionRefreshTask:552 - session with id '93c75620-4b46-4d6c-82b7-4d009a51fc29' removed as master session from SessionRefreshTask.
+2023-11-15 17:55:59 INFO  SessionRefreshTask:552 - session with id 'e4cd9ad5-6465-428d-ad29-b3211b375faf' removed as master session from SessionRefreshTask.
+2023-11-15 17:55:59 INFO  SEDNASpringContext:106 - closing "SEDNA Client Framework server-local context @ 621595086" ...
+2023-11-15 17:55:59 INFO  SEDNASpringContext:106 - closing "SEDNA Client Framework Global Context @ 445489344" ...

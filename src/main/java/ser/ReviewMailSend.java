@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -52,7 +51,7 @@ public class ReviewMailSend extends UnifiedAgent {
             if(prjn.isEmpty()){
                 throw new Exception("Project no is empty.");
             }
-            String mdid = proi.getDescriptorValue(Conf.Descriptors.MainDocRef, String.class);
+            String mdid = proi.getDescriptorValue(Conf.Descriptors.MainDocReference, String.class);
             if(mdid.isEmpty()){
                 throw new Exception("Main Doc Ref is empty.");
             }
@@ -258,9 +257,13 @@ public class ReviewMailSend extends UnifiedAgent {
             String mailHtmlPath = Utils.convertExcelToHtml(mailExcelPath, Conf.DocReviewPaths.MainPath + "/" + mtpn + "[" + uniqueId + "].html");
             String mailPdfPath = Utils.convertExcelToPdf(mailExcelPath, Conf.DocReviewPaths.MainPath + "/" + mtpn + "[" + uniqueId + "].pdf");
 
-            IDocument rvwDoc = Utils.createReviewHistoryAttachment(ses, srv, mainDoc);
+            String docType = (!taskCode.equals("NoMail") ? "Review-History" : "History");
+            if(!taskCode.equals("NoMail")){
+                Utils.deleteSubAttachments(ses, srv, mainDoc.getID(), "History", helper);
+            }
+            IDocument rvwDoc = Utils.createSubAttachment(ses, srv, mainDoc, docType);
 
-            IRepresentation htmt = rvwDoc.addRepresentation(".pdf", "Review History");
+            IRepresentation htmt = rvwDoc.addRepresentation(".pdf", docType);
             htmt.addPartDocument(mailPdfPath);
 
             rvwDoc.commit();

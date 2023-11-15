@@ -2,8 +2,6 @@ package ser;
 
 import com.ser.blueline.*;
 import com.ser.blueline.bpm.IBpmService;
-import com.ser.blueline.bpm.IProcessInstance;
-import com.ser.blueline.bpm.ITask;
 import com.ser.blueline.bpm.IWorkbasket;
 import com.ser.blueline.metaDataComponents.IArchiveClass;
 import com.ser.blueline.metaDataComponents.IStringMatrix;
@@ -207,7 +205,7 @@ public class Utils {
         Multipart multipart = new MimeMultipart("mixed");
 
         BodyPart htmlBodyPart = new MimeBodyPart();
-        htmlBodyPart.setContent(getFileContent(pars.getString("BodyHTMLFile")) , "text/html; charset=UTF-8"); //5
+        htmlBodyPart.setContent(getFileContent(pars.getString("BodyHTMLFile")) , "text/html"); //; charset=UTF-8
         multipart.addBodyPart(htmlBodyPart);
 
         String[] atchs = attachments.split("\\;");
@@ -444,7 +442,25 @@ public class Utils {
         return zipPath;
     }
 
-    static IDocument createReviewHistoryAttachment(ISession ses, IDocumentServer srv, IDocument mainDoc) throws Exception {
+    static void deleteSubAttachments(ISession ses, IDocumentServer srv, String mainDocId, String docType, ProcessHelper helper)  {
+        IArchiveClass ac = srv.getArchiveClass(Conf.ClassIDs.EngineeringAttachments, ses);
+        IDatabase db = ses.getDatabase(ac.getDefaultDatabaseID());
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("TYPE = '").append(Conf.ClassIDs.EngineeringAttachments).append("'")
+                .append(" AND ")
+                .append(Conf.DescriptorLiterals.MainDocReference).append(" = '").append(mainDocId).append("'")
+                .append(" AND ")
+                .append(Conf.DescriptorLiterals.DocType).append(" = '").append(docType).append("'");
+        String whereClause = builder.toString();
+        System.out.println("Where Clause: " + whereClause);
+
+        IInformationObject[] subs = helper.createQuery(new String[]{db.getDatabaseName()} , whereClause, 0);
+        for(IInformationObject ssub : subs){
+            srv.deleteInformationObject(ses, ssub);
+        }
+    }
+    static IDocument createSubAttachment(ISession ses, IDocumentServer srv, IDocument mainDoc, String dType) throws Exception {
 
         IArchiveClass ac = srv.getArchiveClass(Conf.ClassIDs.EngineeringAttachments, ses);
         IDatabase db = ses.getDatabase(ac.getDefaultDatabaseID());
@@ -452,8 +468,8 @@ public class Utils {
         IDocument rtrn = srv.getClassFactory().getDocumentInstance(db.getDatabaseName(), ac.getID(), "0000" , ses);
         rtrn.commit();
 
-        rtrn.setDescriptorValue(Conf.Descriptors.DocType, "Review-History");
-        rtrn.setDescriptorValue(Conf.Descriptors.MainDocRef, mainDoc.getID());
+        rtrn.setDescriptorValue(Conf.Descriptors.DocType, dType);
+        rtrn.setDescriptorValue(Conf.Descriptors.MainDocReference, mainDoc.getID());
 
         rtrn.setDescriptorValue(Conf.Descriptors.ProjectNo,
                 mainDoc.getDescriptorValue(Conf.Descriptors.ProjectNo));

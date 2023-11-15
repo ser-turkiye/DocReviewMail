@@ -37,7 +37,7 @@ public class Conf {
     public static class Descriptors{
         public static final String ProjectNo = "ccmPRJCard_code";
         public static final String ProjectName = "ccmPRJCard_name";
-        public static final String MainDocRef = "MainDocumentReference";
+        public static final String MainDocReference = "MainDocumentReference";
         public static final String DocType = "ccmPrjDocDocType";
         public static final String MainTaskRef = "MainTaskReference";
         public static final String AprvCode = "ccmPrjDocApprCode";
@@ -49,6 +49,7 @@ public class Conf {
     public static class DescriptorLiterals{
         public static final String PrjCardCode = "CCMPRJCARD_CODE";
         public static final String MainTaskReference = "MAINTASKREFERENCE";
+        public static final String MainDocReference = "MAINDOCUMENTREFERENCE";
         public static final String ObjectNumberExternal = "OBJECTNUMBER2";
         public static final String DocType = "CCMPRJDOCDOCTYPE";
         public static final String ReferenceNumber = "CCMREFERENCENUMBER";
