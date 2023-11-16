@@ -75,7 +75,8 @@ public class Utils {
 
         JSONObject rtrn = new JSONObject();
         for(List<String> line : rawTable) {
-            if(!line.get(0).equals(prjn)){continue;}
+            //if(!line.get(0).equals(prjn)){continue;}
+            if(rtrn.has(line.get(1))){continue;}
             rtrn.put(line.get(1), line.get(2));
         }
         return rtrn;

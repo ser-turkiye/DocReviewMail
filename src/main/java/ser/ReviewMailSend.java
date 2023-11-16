@@ -190,7 +190,7 @@ public class ReviewMailSend extends UnifiedAgent {
             JSONObject ists = Utils.getIssueStatuses(ses, srv, prjn);
 
             dbks.put("AprvCode", "");
-            if(Utils.hasDescriptor((IInformationObject) mainDoc, Conf.Descriptors.AprvCode)){
+            if(!taskCode.equals("NoMail") && Utils.hasDescriptor((IInformationObject) mainDoc, Conf.Descriptors.AprvCode)){
                 dbks.put("AprvCode", mainDoc.getDescriptorValue(Conf.Descriptors.AprvCode, String.class));
             }
 
@@ -209,11 +209,16 @@ public class ReviewMailSend extends UnifiedAgent {
             for(String wtro : wtrs){
                 if(!rvws.has(wtro)){continue;}
                 ITask ctsk = (ITask) rvws.get(wtro);
+                IWorkbasket cwbk = ctsk.getCurrentWorkbasket();
                 IUser cusr = ctsk.getFinishedBy();
                 IDecision cdec = ctsk.getDecision();
                 Date ddte = ctsk.getFinishedDate();
                 String sdte = (ddte == null ? "" : (new SimpleDateFormat("dd/MM/yyyy HH:mm")).format(ddte));
                 String fnam = (cusr != null ? cusr.getFullName() : "");
+                String wbnm = (cwbk != null ? cwbk.getFullName() : "");
+
+                String anam = fnam;
+
                 String tcod = (cdec != null ? cdec.getCode() : "");
                 String dcod = (rsts.has(tcod) ? tcod : "");
                 String dtxt = (rsts.has(tcod) ? rsts.getString(tcod) : "");
@@ -225,7 +230,8 @@ public class ReviewMailSend extends UnifiedAgent {
                 }
 
                 dbks.put(wtro + "_Name", ctsk.getName() != null ? ctsk.getName() : "");
-                dbks.put(wtro + "_User", fnam);
+                dbks.put(wtro + "_User", wbnm);
+                dbks.put(wtro + "_Cmpl", fnam);
                 dbks.put(wtro + "_AprvDate", sdte);
                 dbks.put(wtro + "_AprvText", dcod + (dcod != "" && dtxt != "" ? "-" : "") + dtxt);
                 dbks.put(wtro + "_Comments", cmnt);
@@ -258,9 +264,7 @@ public class ReviewMailSend extends UnifiedAgent {
             String mailPdfPath = Utils.convertExcelToPdf(mailExcelPath, Conf.DocReviewPaths.MainPath + "/" + mtpn + "[" + uniqueId + "].pdf");
 
             String docType = (!taskCode.equals("NoMail") ? "Review-History" : "History");
-            if(!taskCode.equals("NoMail")){
-                Utils.deleteSubAttachments(ses, srv, mainDoc.getID(), "History", helper);
-            }
+            Utils.deleteSubAttachments(ses, srv, mainDoc.getID(), "History", helper);
             IDocument rvwDoc = Utils.createSubAttachment(ses, srv, mainDoc, docType);
 
             IRepresentation htmt = rvwDoc.addRepresentation(".pdf", docType);
