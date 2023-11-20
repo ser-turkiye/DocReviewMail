@@ -115,9 +115,14 @@ public class ReviewMailSend extends UnifiedAgent {
                 }
                 if(ttsk.getLoadedParentTask() != null
                 && (tnam.equals("Consolidator Review") || tcod.equals("Step03"))){
-                    ccnt++;
-                    rvws.put("Step03_" + (ccnt <= 9 ? "0" : "") + ccnt, ttsk);
-                    continue;
+
+                    IWorkbasket cwbk = ttsk.getCurrentWorkbasket();
+                    String wbnm = (cwbk != null ? cwbk.getFullName() : "");
+                    if(wbnm != null && !wbnm.equals("System")) {
+                        ccnt++;
+                        rvws.put("Step03_" + (ccnt <= 9 ? "0" : "") + ccnt, ttsk);
+                        continue;
+                    }
                 }
                 if(tnam.equals("Cross checks & prepare transmittal")
                         || tcod.equals("Step04")){

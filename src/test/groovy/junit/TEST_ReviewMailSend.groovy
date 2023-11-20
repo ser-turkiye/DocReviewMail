@@ -23,7 +23,7 @@ class TEST_ReviewMailSend {
         def agent = new ReviewMailSend();
 
 
-        binding["AGENT_EVENT_OBJECT_CLIENT_ID"] = "ST03BPM247bd93cf1-cad4-4e4c-8a9e-a9fba3747641182023-11-16T08:05:30.617Z014"
+        binding["AGENT_EVENT_OBJECT_CLIENT_ID"] = "ST03BPM2491cc9af4-10cb-4778-a19e-79fc3e5e1381182023-11-20T12:06:06.640Z0214"
 
         def result = (AgentExecutionResult) agent.execute(binding.variables)
         assert result.resultCode == 0
