@@ -39,7 +39,29 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class Utils {
+    static JSONObject
+    getSystemConfig(ISession ses) throws Exception {
+        return getSystemConfig(ses, null);
+    }
+    static JSONObject
+    getSystemConfig(ISession ses, IStringMatrix mtrx) throws Exception {
+        if(mtrx == null){
+            mtrx = ses.getDocumentServer().getStringMatrix("CCM_SYSTEM_CONFIG", ses);
+        }
+        if(mtrx == null) throw new Exception("SystemConfig Global Value List not found");
 
+        List<List<String>> rawTable = mtrx.getRawRows();
+
+        String srvn = ses.getSystem().getName().toUpperCase();
+        JSONObject rtrn = new JSONObject();
+        for(List<String> line : rawTable) {
+            String name = line.get(0);
+            if(!name.toUpperCase().startsWith(srvn + ".")){continue;}
+            name = name.substring(srvn.length() + ".".length());
+            rtrn.put(name, line.get(1));
+        }
+        return rtrn;
+    }
     static IInformationObject getEngineeringCRS(String refn, ProcessHelper helper) {
         StringBuilder builder = new StringBuilder();
         builder.append("TYPE = '").append(Conf.ClassIDs.EngineeringAttachments).append("'")
@@ -206,7 +228,7 @@ public class Utils {
         Multipart multipart = new MimeMultipart("mixed");
 
         BodyPart htmlBodyPart = new MimeBodyPart();
-        htmlBodyPart.setContent(getFileContent(pars.getString("BodyHTMLFile")) , "text/html"); //; charset=UTF-8
+        htmlBodyPart.setContent(getHTMLFileContent(pars.getString("BodyHTMLFile")) , "text/html"); //; charset=UTF-8
         multipart.addBodyPart(htmlBodyPart);
 
         String[] atchs = attachments.split("\\;");
@@ -236,6 +258,13 @@ public class Utils {
     }
     static String getFileContent (String path) throws Exception {
         return new String(Files.readAllBytes(Paths.get(path)));
+    }
+    static String
+    getHTMLFileContent (String path) throws Exception {
+        String rtrn = new String(Files.readAllBytes(Paths.get(path)));
+        rtrn = rtrn.replace("\uFEFF", "");
+        rtrn = rtrn.replace("ï»¿", "");
+        return rtrn;
     }
     static JSONObject getMailConfig(ISession ses, IDocumentServer srv, String mtpn) throws Exception {
         return getMailConfig(ses, srv, mtpn, null);

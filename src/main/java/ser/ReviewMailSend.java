@@ -31,13 +31,15 @@ public class ReviewMailSend extends UnifiedAgent {
             return resultError("Null Document object");
 
 
-
-        com.spire.license.LicenseProvider.setLicenseKey(Conf.Licences.SPIRE_XLS);
-
         ses = getSes();
         srv = ses.getDocumentServer();
         bpm = getBpm();
         try {
+            JSONObject scfg = Utils.getSystemConfig(ses);
+            if(scfg.has("LICS.SPIRE_XLS")){
+                com.spire.license.LicenseProvider.setLicenseKey(scfg.getString("LICS.SPIRE_XLS"));
+            }
+
             this.helper = new ProcessHelper(ses);
             ITask task = getEventTask();
             String taskCode = task.getCode();

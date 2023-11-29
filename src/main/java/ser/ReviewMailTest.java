@@ -26,8 +26,6 @@ public class ReviewMailTest extends UnifiedAgent {
         if (getEventTask() == null)
             return resultError("Null Document object");
 
-        com.spire.license.LicenseProvider.setLicenseKey(Conf.Licences.SPIRE_XLS);
-
         ses = getSes();
         srv = ses.getDocumentServer();
         bpm = getBpm();
