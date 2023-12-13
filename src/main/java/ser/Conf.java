@@ -31,6 +31,7 @@ public class Conf {
         public static final String Template = "b9cf43d1-a4d3-482f-9806-44ae64c6139d";
         public static final String SubProcess = "629a28c4-6c36-44d0-90f7-1e5802f038e8";
         public static final String ProjectWorkspace = "32e74338-d268-484d-99b0-f90187240549";
+        public static final String ProjectWorkspace2 = "32e74338-d268-484d-99b0-f90187240549";
 
     }
 
