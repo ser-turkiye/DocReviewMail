@@ -146,6 +146,10 @@ public class Utils {
         if(pars.has("To")){
             mailTo = pars.getString("To");
         }
+
+        if(sender.isEmpty()){throw new Exception("Mail Sender is empty");}
+        if(mailTo.isEmpty()){throw new Exception("Mail To is empty");}
+
         if(pars.has("CC")){
             mailCC = pars.getString("CC");
         }
