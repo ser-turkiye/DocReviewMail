@@ -45,9 +45,12 @@ public class ReviewMailSend extends UnifiedAgent {
             String taskCode = task.getCode();
             taskCode = (taskCode == null ? "" : taskCode);
 
+            //IValueDescriptor[] iDesc = task.getInternalDescriptorList();
 
             (new File(Conf.DocReviewPaths.MainPath)).mkdir();
             IProcessInstance proi = task.getProcessInstance();
+
+            //IValueDescriptor[] internalDesc = proi.getInternalDescriptorList();
 
             String prjn = proi.getDescriptorValue(Conf.Descriptors.ProjectNo, String.class);
             if(prjn.isEmpty()){
@@ -159,6 +162,7 @@ public class ReviewMailSend extends UnifiedAgent {
             for(IInformationObject sinf : sprs){
                 ITask stsk = (ITask) sinf;
 
+
                 String snam = (stsk.getName() != null ? stsk.getName() : "");
                 String scod = (stsk.getCode() != null ? stsk.getCode() : "");
 
@@ -250,7 +254,7 @@ public class ReviewMailSend extends UnifiedAgent {
 
             //dbks.put("DoxisLink", Conf.DocReview.WebBase + helper.getTaskURL(proi.getID()));
             String mtpn = "DOC_REVIEW_MAIL";
-            IDocument mtpl = Utils.getTemplateDocument(prjn, mtpn, helper);
+            IDocument mtpl = Utils.getTemplateDocument(prjt, mtpn);
             if(mtpl == null){
                 throw new Exception("Template-Document [ " + mtpn + " ] not found.");
             }

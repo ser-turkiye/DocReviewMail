@@ -5,6 +5,8 @@ import com.ser.blueline.bpm.IBpmService;
 import com.ser.blueline.bpm.IWorkbasket;
 import com.ser.blueline.metaDataComponents.IArchiveClass;
 import com.ser.blueline.metaDataComponents.IStringMatrix;
+import com.ser.foldermanager.IElement;
+import com.ser.foldermanager.IElements;
 import com.ser.foldermanager.IFolder;
 import com.ser.foldermanager.INode;
 import com.spire.xls.FileFormat;
@@ -72,7 +74,7 @@ public class Utils {
         String whereClause = builder.toString();
         System.out.println("Where Clause: " + whereClause);
 
-        IInformationObject[] informationObjects = helper.createQuery(new String[]{Conf.Databases.EngineeringAttachments} , whereClause , 1);
+        IInformationObject[] informationObjects = helper.createQuery(new String[]{Conf.Databases.EngineeringAttachments} , whereClause , "",1);
         if(informationObjects.length < 1) {return null;}
         return informationObjects[0];
     }
@@ -300,7 +302,29 @@ public class Utils {
     static JSONObject getWorkbasket(ISession ses, IDocumentServer srv, String userID) throws Exception {
         return getWorkbasket(ses, srv, userID, null);
     }
-    static IDocument getTemplateDocument(String prjNo, String tpltName, ProcessHelper helper)  {
+
+    static IDocument getTemplateDocument(IInformationObject info, String tpltName) throws Exception {
+        List<INode> nods = ((IFolder) info).getNodesByName("Templates");
+        for(INode node : nods){
+            IElements elms = node.getElements();
+
+            for(int i=0;i<elms.getCount2();i++) {
+                IElement nelement = elms.getItem2(i);
+                String edocID = nelement.getLink();
+                IInformationObject tplt = info.getSession().getDocumentServer().getInformationObjectByID(edocID, info.getSession());
+                if(tplt == null){continue;}
+
+                if(!hasDescriptor(tplt, Conf.Descriptors.TemplateName)){continue;}
+
+                String etpn = tplt.getDescriptorValue(Conf.Descriptors.TemplateName, String.class);
+                if(etpn == null || !etpn.equals(tpltName)){continue;}
+
+                return (IDocument) tplt;
+            }
+        }
+        return null;
+    }
+    static IDocument getTemplateDocument_old(String prjNo, String tpltName, ProcessHelper helper)  {
         StringBuilder builder = new StringBuilder();
         builder.append("TYPE = '").append(Conf.ClassIDs.Template).append("'")
                 .append(" AND ")
@@ -310,7 +334,7 @@ public class Utils {
         String whereClause = builder.toString();
         System.out.println("Where Clause: " + whereClause);
 
-        IInformationObject[] informationObjects = helper.createQuery(new String[]{Conf.Databases.Company} , whereClause , 1);
+        IInformationObject[] informationObjects = helper.createQuery(new String[]{Conf.Databases.Company} , whereClause , "",1);
         if(informationObjects.length < 1) {return null;}
         return (IDocument) informationObjects[0];
     }
@@ -322,7 +346,7 @@ public class Utils {
         String whereClause = builder.toString();
         System.out.println("Where Clause: " + whereClause);
 
-        IInformationObject[] informationObjects = helper.createQuery(new String[]{Conf.Databases.ProjectWorkspace} , whereClause , 1);
+        IInformationObject[] informationObjects = helper.createQuery(new String[]{Conf.Databases.ProjectWorkspace} , whereClause , "", 1);
         if(informationObjects.length < 1) {return null;}
         return informationObjects[0];
     }
@@ -485,7 +509,7 @@ public class Utils {
         String whereClause = builder.toString();
         System.out.println("Where Clause: " + whereClause);
 
-        IInformationObject[] subs = helper.createQuery(new String[]{db.getDatabaseName()} , whereClause, 0);
+        IInformationObject[] subs = helper.createQuery(new String[]{db.getDatabaseName()} , whereClause, "",0);
         for(IInformationObject ssub : subs){
             srv.deleteInformationObject(ses, ssub);
         }
@@ -592,7 +616,7 @@ public class Utils {
         String whereClause = builder.toString();
         System.out.println("Where Clause: " + whereClause);
 
-        return helper.createQuery(new String[]{Conf.Databases.BPM} , whereClause, 0);
+        return helper.createQuery(new String[]{Conf.Databases.BPM}, whereClause, "ModificationDate", 0);
     }
     public static void saveFileContent(String path, String cntn) throws IOException {
         FileOutputStream outputStream = new FileOutputStream(path);

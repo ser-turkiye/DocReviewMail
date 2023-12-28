@@ -37,6 +37,7 @@ public class Conf {
         public static final String DocNumber = "ccmPrjDocNumber";
         public static final String Revision = "ccmPrjDocRevision";
         public static final String ObjectNumber = "ObjectNumber";
+        public static final String TemplateName = "ObjectNumberExternal";
 
     }
     public static class DescriptorLiterals{
