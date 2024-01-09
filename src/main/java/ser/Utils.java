@@ -41,12 +41,10 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class Utils {
-    static JSONObject
-    getSystemConfig(ISession ses) throws Exception {
+    static JSONObject getSystemConfig(ISession ses) throws Exception {
         return getSystemConfig(ses, null);
     }
-    static JSONObject
-    getSystemConfig(ISession ses, IStringMatrix mtrx) throws Exception {
+    static JSONObject getSystemConfig(ISession ses, IStringMatrix mtrx) throws Exception {
         if(mtrx == null){
             mtrx = ses.getDocumentServer().getStringMatrix("CCM_SYSTEM_CONFIG", ses);
         }
@@ -74,23 +72,9 @@ public class Utils {
         String whereClause = builder.toString();
         System.out.println("Where Clause: " + whereClause);
 
-        IInformationObject[] informationObjects = helper.createQuery(new String[]{Conf.Databases.EngineeringAttachments} , whereClause , "",1);
+        IInformationObject[] informationObjects = helper.createQuery(new String[]{Conf.Databases.EngineeringAttachments}, whereClause , "",1, true);
         if(informationObjects.length < 1) {return null;}
         return informationObjects[0];
-    }
-    static IRepresentation updateRepresentation(IDocument document, String type, String desc, String path) throws Exception {
-        IRepresentation[] list = document.getRepresentationList();
-        IRepresentation rtrn;
-        for(IRepresentation repr : list){
-            if(!repr.getType().equals(type)){continue;}
-            if(!repr.getDescription().equals(desc)){continue;}
-
-            document.removeRepresentation(repr.getRepresentationNumber());
-        }
-
-        rtrn = document.addRepresentation(type, desc);
-        rtrn.addPartDocument(path);
-        return rtrn;
     }
     static JSONObject getMainDocReviewStatuses(ISession ses, IDocumentServer srv, String prjn) throws Exception {
         IStringMatrix mtrx = getMainDocReviewStatusMatrix(ses, srv);
@@ -128,28 +112,6 @@ public class Utils {
             rtrn.add(wusr);
         }
         return rtrn;
-    }
-    static String getWorkbasketEMails(ISession ses, IDocumentServer srv, IBpmService bpm, String users) throws Exception {
-        List<JSONObject> wrbs = getWorkbaskets(ses, srv, users);
-        List<String> rtrn = new ArrayList<>();
-        for (JSONObject wrba : wrbs) {
-            if(wrba.get("ID") == null){continue;}
-            IWorkbasket wb = bpm.getWorkbasket(wrba.getString("ID"));
-            if(wb == null){continue;}
-            String mail = wb.getNotifyEMail();
-            if(mail == null){continue;}
-            rtrn.add(mail);
-        }
-        return String.join(";", rtrn);
-    }
-    static String getWorkbasketDisplayNames(ISession ses, IDocumentServer srv, String users) throws Exception {
-        List<JSONObject> wrbs = getWorkbaskets(ses, srv, users);
-        List<String> rtrn = new ArrayList<>();
-        for (JSONObject wrba : wrbs) {
-            if(wrba.get("DisplayName") == null){continue;}
-            rtrn.add(wrba.getString("DisplayName"));
-        }
-        return String.join(";", rtrn);
     }
     static void sendHTMLMail(ISession ses, IDocumentServer srv, String mtpn, JSONObject pars) throws Exception {
         JSONObject mcfg = Utils.getMailConfig(ses, srv, mtpn);
@@ -258,11 +220,7 @@ public class Utils {
         if (rtrn == null) throw new Exception("MailConfig Global Value List not found");
         return rtrn;
     }
-    static String getFileContent (String path) throws Exception {
-        return new String(Files.readAllBytes(Paths.get(path)));
-    }
-    static String
-    getHTMLFileContent (String path) throws Exception {
+    static String getHTMLFileContent (String path) throws Exception {
         String rtrn = new String(Files.readAllBytes(Paths.get(path)));
         rtrn = rtrn.replace("\uFEFF", "");
         rtrn = rtrn.replace("ï»¿", "");
@@ -299,12 +257,9 @@ public class Utils {
         if (rtrn == null) throw new Exception("Workbaskets Global Value List not found");
         return rtrn;
     }
-    static JSONObject getWorkbasket(ISession ses, IDocumentServer srv, String userID) throws Exception {
-        return getWorkbasket(ses, srv, userID, null);
-    }
-
-    static IDocument getTemplateDocument(IInformationObject info, String tpltName) throws Exception {
+    static IDocument getTemplateDocument(IInformationObject info, String tpltName, ISession ses, IDocumentServer srv) throws Exception {
         List<INode> nods = ((IFolder) info).getNodesByName("Templates");
+        IDocument rtrn = null;
         for(INode node : nods){
             IElements elms = node.getElements();
 
@@ -319,24 +274,15 @@ public class Utils {
                 String etpn = tplt.getDescriptorValue(Conf.Descriptors.TemplateName, String.class);
                 if(etpn == null || !etpn.equals(tpltName)){continue;}
 
-                return (IDocument) tplt;
+                rtrn = (IDocument) tplt;
+                break;
             }
+            if(rtrn != null){break;}
         }
-        return null;
-    }
-    static IDocument getTemplateDocument_old(String prjNo, String tpltName, ProcessHelper helper)  {
-        StringBuilder builder = new StringBuilder();
-        builder.append("TYPE = '").append(Conf.ClassIDs.Template).append("'")
-                .append(" AND ")
-                .append(Conf.DescriptorLiterals.PrjCardCode).append(" = '").append(prjNo).append("'")
-                .append(" AND ")
-                .append(Conf.DescriptorLiterals.ObjectNumberExternal).append(" = '").append(tpltName).append("'");
-        String whereClause = builder.toString();
-        System.out.println("Where Clause: " + whereClause);
-
-        IInformationObject[] informationObjects = helper.createQuery(new String[]{Conf.Databases.Company} , whereClause , "",1);
-        if(informationObjects.length < 1) {return null;}
-        return (IDocument) informationObjects[0];
+        if(srv != null && ses != null) {
+            rtrn = srv.getDocumentCurrentVersion(ses, rtrn.getID());
+        }
+        return rtrn;
     }
     static IInformationObject getProjectWorkspace(String prjn, ProcessHelper helper) {
         StringBuilder builder = new StringBuilder();
@@ -346,7 +292,7 @@ public class Utils {
         String whereClause = builder.toString();
         System.out.println("Where Clause: " + whereClause);
 
-        IInformationObject[] informationObjects = helper.createQuery(new String[]{Conf.Databases.ProjectWorkspace} , whereClause , "", 1);
+        IInformationObject[] informationObjects = helper.createQuery(new String[]{Conf.Databases.ProjectWorkspace} , whereClause , "", 1, false);
         if(informationObjects.length < 1) {return null;}
         return informationObjects[0];
     }
@@ -372,21 +318,6 @@ public class Utils {
             }
         }
         return null;
-    }
-    static void copyFile(String spth, String tpth) throws Exception {
-        FileUtils.copyFile(new File(spth), new File(tpth));
-    }
-    public static void deleteRow(Sheet sheet, int rowNo) throws IOException {
-            int lastRowNum = sheet.getLastRowNum();
-            if (rowNo >= 0 && rowNo < lastRowNum) {
-                sheet.shiftRows(rowNo + 1, lastRowNum, -1);
-            }
-            if (rowNo == lastRowNum) {
-                Row removingRow=sheet.getRow(rowNo);
-                if(removingRow != null) {
-                    sheet.removeRow(removingRow);
-                }
-            }
     }
     public static void removeRows(String spth, String tpth, Integer shtIx, String prfx, Integer colIx, List<Integer> hlst, List<String> tlst) throws IOException {
 
@@ -471,31 +402,6 @@ public class Utils {
         sheet.saveToHtml(htmlPath, options);
         return htmlPath;
     }
-    public static String zipFiles(String zipPath, String tpltSavePath, List<String> expFilePaths) throws IOException {
-        ZipOutputStream zout = new ZipOutputStream(new FileOutputStream(new File(zipPath)));
-        if(!tpltSavePath.isEmpty()) {
-            //ZipEntry zltp = new ZipEntry("00." + Paths.get(tpltSavePath).getFileName().toString());
-            ZipEntry zltp = new ZipEntry("_Transmittal." + FilenameUtils.getExtension(tpltSavePath));
-            zout.putNextEntry(zltp);
-            byte[] zdtp = Files.readAllBytes(Paths.get(tpltSavePath));
-            zout.write(zdtp, 0, zdtp.length);
-            zout.closeEntry();
-        }
-
-        for (String expFilePath : expFilePaths) {
-            String fileName = Paths.get(expFilePath).getFileName().toString();
-            fileName = fileName.replace("[@SLASH]", "/");
-            ZipEntry zlin = new ZipEntry(fileName);
-
-            zout.putNextEntry(zlin);
-            byte[] zdln = Files.readAllBytes(Paths.get(expFilePath));
-            zout.write(zdln, 0, zdln.length);
-            zout.closeEntry();
-        }
-        zout.close();
-        return zipPath;
-    }
-
     static void deleteSubAttachments(ISession ses, IDocumentServer srv, String mainDocId, String docType, ProcessHelper helper)  {
         IArchiveClass ac = srv.getArchiveClass(Conf.ClassIDs.EngineeringAttachments, ses);
         IDatabase db = ses.getDatabase(ac.getDefaultDatabaseID());
@@ -509,7 +415,7 @@ public class Utils {
         String whereClause = builder.toString();
         System.out.println("Where Clause: " + whereClause);
 
-        IInformationObject[] subs = helper.createQuery(new String[]{db.getDatabaseName()} , whereClause, "",0);
+        IInformationObject[] subs = helper.createQuery(new String[]{db.getDatabaseName()} , whereClause, "",0, false);
         for(IInformationObject ssub : subs){
             srv.deleteInformationObject(ses, ssub);
         }
@@ -578,18 +484,6 @@ public class Utils {
         }
         return rtrn;
     }
-    public static INode getNode(IFolder fold, String fldn){
-        List<INode> nodesByName = fold.getNodesByName(fldn);
-        return fold.getNodeByID(nodesByName.get(0).getID());
-    }
-    public static String getCellValue(Sheet sheet, String refn){
-
-        CellReference cr = new CellReference(refn);
-        Row row = sheet.getRow(cr.getRow());
-        Cell rtrn = row.getCell(cr.getCol());
-        return rtrn.getRichStringCellValue().getString();
-    }
-
     public static String updateCell(String str, JSONObject bookmarks){
         StringBuffer rtr1 = new StringBuffer();
         String tmp = str + "";
@@ -616,14 +510,7 @@ public class Utils {
         String whereClause = builder.toString();
         System.out.println("Where Clause: " + whereClause);
 
-        return helper.createQuery(new String[]{Conf.Databases.BPM}, whereClause, "ModificationDate", 0);
-    }
-    public static void saveFileContent(String path, String cntn) throws IOException {
-        FileOutputStream outputStream = new FileOutputStream(path);
-        byte[] bctn = cntn.getBytes();
-        outputStream.write(bctn);
-
-        outputStream.close();
+        return helper.createQuery(new String[]{Conf.Databases.BPM}, whereClause, "ModificationDate", 0, false);
     }
     public static JSONObject getRowGroups(Sheet sheet, String prfx, Integer colIx)  {
         JSONObject rtrn = new JSONObject();

@@ -33,6 +33,33 @@ public class ReviewMailTest extends UnifiedAgent {
             this.helper = new ProcessHelper(ses);
             ITask task = getEventTask();
 
+            IInformationObjectLinks links = task.getProcessInstance().getLoadedInformationObjectLinks();
+            List<ILink> lnks = links.getLinks();
+
+            for (ILink link : lnks) {
+                IInformationObject xdoc = link.getTargetInformationObject();
+                //if(!xdoc.getClassID().equals(Conf.ClassIDs.EngineeringDocument)){continue;}
+
+                String disp = xdoc.getDisplayName();
+                String dpjn = xdoc.getDescriptorValue(Conf.Descriptors.ProjectNo, String.class);
+                dpjn = (dpjn == null ? "" : dpjn);
+
+                //ILink[] xlnks = srv.getReferencedRelationships(ses, ((IInformationObject) xdoc), true,true,true);
+                ILink[] xlnks = srv.getReferencingRelationships(ses, xdoc.getID(), true,true, ses.getDatabaseByName("BPM"));
+                List<String> slnks = new ArrayList<>();
+                for(ILink xlnk : xlnks){
+                    IInformationObject ldoc = xlnk.getSourceInformationObject();
+                    String clsId = ldoc.getClassID();
+                    String xId = ldoc.getID();
+                    //if(!clsId.equals(GeneralLib.ClassIDs.DocMainReview)){continue;}
+
+                    String ldsp = ldoc.getDisplayName();
+                    System.out.println("LDOC [" + clsId + "] ::: [" + ldsp + "] ::: [" + xId + "]");
+                }
+
+
+            }
+            /*
             Date tbgn = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse("08/11/2023 14:15:00");
             Date tend = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse("01/11/2023 08:30:00");
 
@@ -47,7 +74,7 @@ public class ReviewMailTest extends UnifiedAgent {
 
             System.out.println("Duration-Day    : " + durd);
             System.out.println("Duration-Hour   : " + durh);
-
+            */
 
             System.out.println("Tested.");
 

@@ -254,7 +254,7 @@ public class ReviewMailSend extends UnifiedAgent {
 
             //dbks.put("DoxisLink", Conf.DocReview.WebBase + helper.getTaskURL(proi.getID()));
             String mtpn = "DOC_REVIEW_MAIL";
-            IDocument mtpl = Utils.getTemplateDocument(prjt, mtpn);
+            IDocument mtpl = Utils.getTemplateDocument(prjt, mtpn, ses, srv);
             if(mtpl == null){
                 throw new Exception("Template-Document [ " + mtpn + " ] not found.");
             }
@@ -308,7 +308,11 @@ public class ReviewMailSend extends UnifiedAgent {
                 mail.put("Subject", "Review History For " + dbks.getString("DocNo") + " / " + dbks.getString("RevNo"));
                 mail.put("BodyHTMLFile", mailHtmlPath);
 
-                Utils.sendHTMLMail(ses, srv, mtpn, mail);
+                try {
+                    Utils.sendHTMLMail(ses, srv, mtpn, mail);
+                }catch(Exception ex){
+                    System.out.println("EXCP [Send-Mail] : " + ex.getMessage());
+                }
             }
 
             System.out.println("Tested.");
