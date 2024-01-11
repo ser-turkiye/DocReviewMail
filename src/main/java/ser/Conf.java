@@ -7,7 +7,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Conf {
-    public static class DocReviewPaths {
+    public static class Paths {
         public static final String MainPath = "C:/tmp2/bulk/docreview";
     }
 

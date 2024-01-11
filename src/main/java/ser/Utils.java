@@ -1,9 +1,9 @@
 package ser;
 
 import com.ser.blueline.*;
-import com.ser.blueline.bpm.IBpmService;
-import com.ser.blueline.bpm.IWorkbasket;
+import com.ser.blueline.bpm.*;
 import com.ser.blueline.metaDataComponents.IArchiveClass;
+import com.ser.blueline.metaDataComponents.IArchiveFolderClass;
 import com.ser.blueline.metaDataComponents.IStringMatrix;
 import com.ser.foldermanager.IElement;
 import com.ser.foldermanager.IElements;
@@ -23,6 +23,8 @@ import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.apache.poi.common.usermodel.HyperlinkType;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellReference;
@@ -33,6 +35,7 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 import java.util.regex.Matcher;
@@ -41,18 +44,54 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class Utils {
-    static JSONObject getSystemConfig(ISession ses) throws Exception {
-        return getSystemConfig(ses, null);
+    static Logger log = LogManager.getLogger();
+    static ISession session = null;
+    static IDocumentServer server = null;
+    static IBpmService bpm;
+    static void loadDirectory(String path) {
+        (new File(path)).mkdir();
     }
-    static JSONObject getSystemConfig(ISession ses, IStringMatrix mtrx) throws Exception {
+    public static boolean hasDescriptor(IInformationObject object, String descName){
+        IDescriptor[] descs = session.getDocumentServer().getDescriptorByName(descName, session);
+        List<String> checkList = new ArrayList<>();
+        for(IDescriptor ddsc : descs){
+            checkList.add(ddsc.getId());
+        }
+
+        String[] descIds = new String[0];
+        if(object instanceof IFolder){
+            String classID = object.getClassID();
+            IArchiveFolderClass folderClass = session.getDocumentServer().getArchiveFolderClass(classID , session);
+            descIds = folderClass.getAssignedDescriptorIDs();
+        }else if(object instanceof IDocument){
+            IArchiveClass documentClass = ((IDocument) object).getArchiveClass();
+            descIds = documentClass.getAssignedDescriptorIDs();
+        }else if(object instanceof ITask){
+            IProcessType processType = ((ITask) object).getProcessType();
+            descIds = processType.getAssignedDescriptorIDs();
+        }else if(object instanceof IProcessInstance){
+            IProcessType processType = ((IProcessInstance) object).getProcessType();
+            descIds = processType.getAssignedDescriptorIDs();
+        }
+
+        List<String> descList = Arrays.asList(descIds);
+        for(String dId : descList){
+            if(checkList.contains(dId)){return true;}
+        }
+        return false;
+    }
+    static JSONObject getSystemConfig() throws Exception {
+        return getSystemConfig(null);
+    }
+    static JSONObject getSystemConfig(IStringMatrix mtrx) throws Exception {
         if(mtrx == null){
-            mtrx = ses.getDocumentServer().getStringMatrix("CCM_SYSTEM_CONFIG", ses);
+            mtrx = server.getStringMatrix("CCM_SYSTEM_CONFIG", session);
         }
         if(mtrx == null) throw new Exception("SystemConfig Global Value List not found");
 
         List<List<String>> rawTable = mtrx.getRawRows();
 
-        String srvn = ses.getSystem().getName().toUpperCase();
+        String srvn = session.getSystem().getName().toUpperCase();
         JSONObject rtrn = new JSONObject();
         for(List<String> line : rawTable) {
             String name = line.get(0);
@@ -70,14 +109,14 @@ public class Utils {
                 .append(" AND ")
                 .append(Conf.DescriptorLiterals.ReferenceNumber).append(" = '").append(refn).append("'");
         String whereClause = builder.toString();
-        System.out.println("Where Clause: " + whereClause);
+        log.info("Where Clause: " + whereClause);
 
         IInformationObject[] informationObjects = helper.createQuery(new String[]{Conf.Databases.EngineeringAttachments}, whereClause , "",1, true);
         if(informationObjects.length < 1) {return null;}
         return informationObjects[0];
     }
-    static JSONObject getMainDocReviewStatuses(ISession ses, IDocumentServer srv, String prjn) throws Exception {
-        IStringMatrix mtrx = getMainDocReviewStatusMatrix(ses, srv);
+    static JSONObject getMainDocReviewStatuses(String prjn) throws Exception {
+        IStringMatrix mtrx = getMainDocReviewStatusMatrix();
         if(mtrx == null) throw new Exception("MainDoc Review Status Global Value List not found");
         List<List<String>> rawTable = mtrx.getRawRows();
 
@@ -89,8 +128,8 @@ public class Utils {
         }
         return rtrn;
     }
-    static JSONObject getIssueStatuses(ISession ses, IDocumentServer srv, String prjn) throws Exception {
-        IStringMatrix mtrx = getIssueStatusMatrix(ses, srv);
+    static JSONObject getIssueStatuses(String prjn) throws Exception {
+        IStringMatrix mtrx = getIssueStatusMatrix();
         if(mtrx == null) throw new Exception("Issue Status Global Value List not found");
         List<List<String>> rawTable = mtrx.getRawRows();
 
@@ -101,20 +140,8 @@ public class Utils {
         }
         return rtrn;
     }
-    static List<JSONObject> getWorkbaskets(ISession ses, IDocumentServer srv, String users) throws Exception {
-        List<JSONObject> rtrn = new ArrayList<>();
-        IStringMatrix mtrx = getWorkbasketMatrix(ses, srv);
-        String[] usrs = users.split("\\;");
-
-        for (String usr : usrs) {
-            JSONObject wusr = getWorkbasket(ses, srv, usr.trim(), mtrx);
-            if(wusr == null){continue;}
-            rtrn.add(wusr);
-        }
-        return rtrn;
-    }
-    static void sendHTMLMail(ISession ses, IDocumentServer srv, String mtpn, JSONObject pars) throws Exception {
-        JSONObject mcfg = Utils.getMailConfig(ses, srv, mtpn);
+    static void sendHTMLMail(JSONObject pars) throws Exception {
+        JSONObject mcfg = Utils.getMailConfig();
 
         String host = mcfg.getString("host");
         String port = mcfg.getString("port");
@@ -181,9 +208,9 @@ public class Utils {
             };
         }
         props.put("mail.mime.charset","UTF-8");
-        Session session = (authenticator == null ? Session.getDefaultInstance(props) : Session.getDefaultInstance(props, authenticator));
+        Session sess = (authenticator == null ? Session.getDefaultInstance(props) : Session.getDefaultInstance(props, authenticator));
 
-        MimeMessage message = new MimeMessage(session);
+        MimeMessage message = new MimeMessage(sess);
         message.setFrom(new InternetAddress(sender.replace(";", ",")));
         message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(mailTo.replace(";", ",")));
         message.setRecipients(Message.RecipientType.CC, InternetAddress.parse(mailCC.replace(";", ",")));
@@ -215,8 +242,8 @@ public class Utils {
         Transport.send(message);
 
     }
-    static IStringMatrix getMailConfigMatrix(ISession ses, IDocumentServer srv, String mtpn) throws Exception {
-        IStringMatrix rtrn = srv.getStringMatrix("CCM_MAIL_CONFIG", ses);
+    static IStringMatrix getMailConfigMatrix() throws Exception {
+        IStringMatrix rtrn = server.getStringMatrix("CCM_MAIL_CONFIG", session);
         if (rtrn == null) throw new Exception("MailConfig Global Value List not found");
         return rtrn;
     }
@@ -226,12 +253,12 @@ public class Utils {
         rtrn = rtrn.replace("ï»¿", "");
         return rtrn;
     }
-    static JSONObject getMailConfig(ISession ses, IDocumentServer srv, String mtpn) throws Exception {
-        return getMailConfig(ses, srv, mtpn, null);
+    static JSONObject getMailConfig() throws Exception {
+        return getMailConfig(null);
     }
-    static JSONObject getMailConfig(ISession ses, IDocumentServer srv, String mtpn, IStringMatrix mtrx) throws Exception {
+    static JSONObject getMailConfig(IStringMatrix mtrx) throws Exception {
         if(mtrx == null){
-            mtrx = getMailConfigMatrix(ses, srv, mtpn);
+            mtrx = getMailConfigMatrix();
         }
         if(mtrx == null) throw new Exception("MailConfig Global Value List not found");
         List<List<String>> rawTable = mtrx.getRawRows();
@@ -242,13 +269,13 @@ public class Utils {
         }
         return rtrn;
     }
-    static IStringMatrix getMainDocReviewStatusMatrix(ISession ses, IDocumentServer srv) throws Exception {
-        IStringMatrix rtrn = srv.getStringMatrix("MainDocReviewStatus", ses);
+    static IStringMatrix getMainDocReviewStatusMatrix() throws Exception {
+        IStringMatrix rtrn = server.getStringMatrix("MainDocReviewStatus", session);
         if (rtrn == null) throw new Exception("MainDocReviewStatus Global Value List not found");
         return rtrn;
     }
-    static IStringMatrix getIssueStatusMatrix(ISession ses, IDocumentServer srv) throws Exception {
-        IStringMatrix rtrn = srv.getStringMatrix("CCM_QCON_ISSUE-STATUSES", ses);
+    static IStringMatrix getIssueStatusMatrix() throws Exception {
+        IStringMatrix rtrn = server.getStringMatrix("CCM_QCON_ISSUE-STATUSES", session);
         if (rtrn == null) throw new Exception("IssueStatus Global Value List not found");
         return rtrn;
     }
@@ -257,7 +284,7 @@ public class Utils {
         if (rtrn == null) throw new Exception("Workbaskets Global Value List not found");
         return rtrn;
     }
-    static IDocument getTemplateDocument(IInformationObject info, String tpltName, ISession ses, IDocumentServer srv) throws Exception {
+    static IDocument getTemplateDocument(IInformationObject info, String tpltName) throws Exception {
         List<INode> nods = ((IFolder) info).getNodesByName("Templates");
         IDocument rtrn = null;
         for(INode node : nods){
@@ -279,8 +306,8 @@ public class Utils {
             }
             if(rtrn != null){break;}
         }
-        if(srv != null && ses != null) {
-            rtrn = srv.getDocumentCurrentVersion(ses, rtrn.getID());
+        if(server != null && session != null) {
+            rtrn = server.getDocumentCurrentVersion(session, rtrn.getID());
         }
         return rtrn;
     }
@@ -290,34 +317,11 @@ public class Utils {
                 .append(" AND ")
                 .append(Conf.DescriptorLiterals.PrjCardCode).append(" = '").append(prjn).append("'");
         String whereClause = builder.toString();
-        System.out.println("Where Clause: " + whereClause);
+        log.info("Where Clause: " + whereClause);
 
         IInformationObject[] informationObjects = helper.createQuery(new String[]{Conf.Databases.ProjectWorkspace} , whereClause , "", 1, false);
         if(informationObjects.length < 1) {return null;}
         return informationObjects[0];
-    }
-    static JSONObject getWorkbasket(ISession ses, IDocumentServer srv, String userID, IStringMatrix mtrx) throws Exception {
-        if(mtrx == null){
-            mtrx = getWorkbasketMatrix(ses, srv);
-        }
-        if(mtrx == null) throw new Exception("Workbaskets Global Value List not found");
-        List<List<String>> rawTable = mtrx.getRawRows();
-
-        for(List<String> line : rawTable) {
-            if(line.contains(userID)) {
-                JSONObject rtrn = new JSONObject();
-                rtrn.put("ID", line.get(0));
-                rtrn.put("Name", line.get(1));
-                rtrn.put("DisplayName", line.get(2));
-                rtrn.put("Active", line.get(3));
-                rtrn.put("Visible", line.get(4));
-                rtrn.put("Type", line.get(5));
-                rtrn.put("Organization", line.get(6));
-                rtrn.put("Access", line.get(7));
-                return rtrn;
-            }
-        }
-        return null;
     }
     public static void removeRows(String spth, String tpth, Integer shtIx, String prfx, Integer colIx, List<Integer> hlst, List<String> tlst) throws IOException {
 
@@ -383,7 +387,6 @@ public class Utils {
         tost.close();
         return tpltSavePath;
     }
-
     public static String convertExcelToPdf(String excelPath, String pdfPath)  {
         Workbook workbook = new Workbook();
         workbook.loadFromFile(excelPath);
@@ -392,7 +395,6 @@ public class Utils {
 
         return pdfPath;
     }
-
     public static String convertExcelToHtml(String excelPath, String htmlPath)  {
         Workbook workbook = new Workbook();
         workbook.loadFromFile(excelPath);
@@ -402,9 +404,9 @@ public class Utils {
         sheet.saveToHtml(htmlPath, options);
         return htmlPath;
     }
-    static void deleteSubAttachments(ISession ses, IDocumentServer srv, String mainDocId, String docType, ProcessHelper helper)  {
-        IArchiveClass ac = srv.getArchiveClass(Conf.ClassIDs.EngineeringAttachments, ses);
-        IDatabase db = ses.getDatabase(ac.getDefaultDatabaseID());
+    static void deleteSubAttachments(String mainDocId, String docType, ProcessHelper helper)  {
+        IArchiveClass ac = server.getArchiveClass(Conf.ClassIDs.EngineeringAttachments, session);
+        IDatabase db = session.getDatabase(ac.getDefaultDatabaseID());
 
         StringBuilder builder = new StringBuilder();
         builder.append("TYPE = '").append(Conf.ClassIDs.EngineeringAttachments).append("'")
@@ -413,19 +415,19 @@ public class Utils {
                 .append(" AND ")
                 .append(Conf.DescriptorLiterals.DocType).append(" = '").append(docType).append("'");
         String whereClause = builder.toString();
-        System.out.println("Where Clause: " + whereClause);
+        log.info("Where Clause: " + whereClause);
 
         IInformationObject[] subs = helper.createQuery(new String[]{db.getDatabaseName()} , whereClause, "",0, false);
         for(IInformationObject ssub : subs){
-            srv.deleteInformationObject(ses, ssub);
+            server.deleteInformationObject(session, ssub);
         }
     }
-    static IDocument createSubAttachment(ISession ses, IDocumentServer srv, IDocument mainDoc, String dType) throws Exception {
+    static IDocument createSubAttachment(IDocument mainDoc, String dType) throws Exception {
 
-        IArchiveClass ac = srv.getArchiveClass(Conf.ClassIDs.EngineeringAttachments, ses);
-        IDatabase db = ses.getDatabase(ac.getDefaultDatabaseID());
+        IArchiveClass ac = server.getArchiveClass(Conf.ClassIDs.EngineeringAttachments, session);
+        IDatabase db = session.getDatabase(ac.getDefaultDatabaseID());
 
-        IDocument rtrn = srv.getClassFactory().getDocumentInstance(db.getDatabaseName(), ac.getID(), "0000" , ses);
+        IDocument rtrn = server.getClassFactory().getDocumentInstance(db.getDatabaseName(), ac.getID(), "0000" , session);
         rtrn.commit();
 
         rtrn.setDescriptorValue(Conf.Descriptors.DocType, dType);
@@ -441,7 +443,7 @@ public class Utils {
         rtrn.setDescriptorValue(Conf.Descriptors.Revision,
             mainDoc.getDescriptorValue(Conf.Descriptors.Revision));
 
-        String atnr = (new CounterHelper(ses, rtrn.getClassID())).getCounterStr();
+        String atnr = (new CounterHelper(session, rtrn.getClassID())).getCounterStr();
 
         rtrn.setDescriptorValue(Conf.Descriptors.ObjectNumber,
             "RVH-" + atnr);
@@ -450,14 +452,13 @@ public class Utils {
 
         return rtrn;
     }
-    public static boolean hasDescriptor(IInformationObject infObj, String dscn) throws Exception {
+    public static boolean hasDescriptor_old01(IInformationObject infObj, String dscn) throws Exception {
         IValueDescriptor[] vds = infObj.getDescriptorList();
         for(IValueDescriptor vd : vds){
             if(vd.getName().equals(dscn)){return true;}
         }
         return false;
     }
-
     public static String nameDocument(IDocument document) throws Exception {
         IDocumentPart partDocument = document.getPartDocument(document.getDefaultRepresentation() , 0);
         return partDocument.getFilename();
@@ -508,7 +509,7 @@ public class Utils {
                 .append(" AND ")
                 .append(Conf.DescriptorLiterals.MainTaskReference).append(" = '").append(mainDocId).append("'");
         String whereClause = builder.toString();
-        System.out.println("Where Clause: " + whereClause);
+        log.info("Where Clause: " + whereClause);
 
         return helper.createQuery(new String[]{Conf.Databases.BPM}, whereClause, "ModificationDate", 0, false);
     }
