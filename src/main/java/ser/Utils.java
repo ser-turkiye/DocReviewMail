@@ -240,7 +240,12 @@ public class Utils {
         return rtrn;
     }
     static String getFileContent (String path) throws Exception {
-        return new String(Files.readAllBytes(Paths.get(path)));
+        //return new String(Files.readAllBytes(Paths.get(path)));
+        String rtrn = new String(Files.readAllBytes(Paths.get(path)));
+        rtrn = rtrn.replace("\uFEFF", "");
+        rtrn = rtrn.replace("ï»¿", "");
+        rtrn = rtrn.replace("ï»¿ï»¿", "");
+        return rtrn;
     }
     static JSONObject getMailConfig(ISession ses, IDocumentServer srv, String mtpn) throws Exception {
         return getMailConfig(ses, srv, mtpn, null);
