@@ -211,8 +211,7 @@ public class Utils {
         Multipart multipart = new MimeMultipart("mixed");
 
         BodyPart htmlBodyPart = new MimeBodyPart();
-        //htmlBodyPart.setContent(getFileContent(pars.getString("BodyHTMLFile")) , "text/html; charset=UTF-8"); //5
-        htmlBodyPart.setContent(getFileContent(pars.getString("BodyHTMLFile")), "text/html"); //5
+        htmlBodyPart.setContent(getFileContent(pars.getString("BodyHTMLFile")) , "text/html; charset=UTF-8"); //5
         multipart.addBodyPart(htmlBodyPart);
 
         String[] atchs = attachments.split("\\;");
@@ -241,12 +240,7 @@ public class Utils {
         return rtrn;
     }
     static String getFileContent (String path) throws Exception {
-        //return new String(Files.readAllBytes(Paths.get(path)));
-        String rtrn = new String(Files.readAllBytes(Paths.get(path)));
-        rtrn = rtrn.replace("\uFEFF", "");
-        rtrn = rtrn.replace("ï»¿", "");
-        rtrn = rtrn.replace("ï»¿ï»¿", "");
-        return rtrn;
+        return new String(Files.readAllBytes(Paths.get(path)));
     }
     static JSONObject getMailConfig(ISession ses, IDocumentServer srv, String mtpn) throws Exception {
         return getMailConfig(ses, srv, mtpn, null);
@@ -335,16 +329,16 @@ public class Utils {
         FileUtils.copyFile(new File(spth), new File(tpth));
     }
     public static void deleteRow(Sheet sheet, int rowNo) throws IOException {
-            int lastRowNum = sheet.getLastRowNum();
-            if (rowNo >= 0 && rowNo < lastRowNum) {
-                sheet.shiftRows(rowNo + 1, lastRowNum, -1);
+        int lastRowNum = sheet.getLastRowNum();
+        if (rowNo >= 0 && rowNo < lastRowNum) {
+            sheet.shiftRows(rowNo + 1, lastRowNum, -1);
+        }
+        if (rowNo == lastRowNum) {
+            Row removingRow=sheet.getRow(rowNo);
+            if(removingRow != null) {
+                sheet.removeRow(removingRow);
             }
-            if (rowNo == lastRowNum) {
-                Row removingRow=sheet.getRow(rowNo);
-                if(removingRow != null) {
-                    sheet.removeRow(removingRow);
-                }
-            }
+        }
     }
     public static void removeRows(String spth, String tpth, Integer shtIx, String prfx, Integer colIx, List<Integer> hlst, List<String> tlst) throws IOException {
 
@@ -391,7 +385,7 @@ public class Utils {
                 }
 
                 if(clvv.indexOf("[[") != (-1) && clvv.indexOf("]]") != (-1)
-                && clvv.indexOf("[[") < clvv.indexOf("]]")){
+                        && clvv.indexOf("[[") < clvv.indexOf("]]")){
                     String znam = clvv.substring(clvv.indexOf("[[") + "[[".length(), clvv.indexOf("]]"));
                     if(pbks.has(znam)){
                         tcll.setCellValue(znam);
@@ -471,14 +465,14 @@ public class Utils {
                 mainDoc.getDescriptorValue(Conf.Descriptors.ProjectName));
 
         rtrn.setDescriptorValue(Conf.Descriptors.DocNumber,
-            mainDoc.getDescriptorValue(Conf.Descriptors.DocNumber));
+                mainDoc.getDescriptorValue(Conf.Descriptors.DocNumber));
         rtrn.setDescriptorValue(Conf.Descriptors.Revision,
-            mainDoc.getDescriptorValue(Conf.Descriptors.Revision));
+                mainDoc.getDescriptorValue(Conf.Descriptors.Revision));
 
         String atnr = (new CounterHelper(ses, rtrn.getClassID())).getCounterStr();
 
         rtrn.setDescriptorValue(Conf.Descriptors.ObjectNumber,
-            "RVH-" + atnr);
+                "RVH-" + atnr);
 
         rtrn.commit();
 
@@ -575,7 +569,7 @@ public class Utils {
             if(cval.isEmpty()){continue;}
 
             if(!cval.startsWith("[&" + prfx + ".")
-            || !cval.endsWith("&]")){continue;}
+                    || !cval.endsWith("&]")){continue;}
 
             String znam = cval.substring(("[&" + prfx + ".").length(), cval.length() - ("]&").length());
             rtrn.put(znam, row);

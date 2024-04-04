@@ -94,11 +94,11 @@ public class ReviewMailSend extends UnifiedAgent {
                 if(ttsk.getStatus() != TaskStatus.COMPLETED){continue;}
 
                 if(ttsk.getCreationDate() != null
-                && (tbgn == null  || tbgn.after(ttsk.getCreationDate()))){
+                        && (tbgn == null  || tbgn.after(ttsk.getCreationDate()))){
                     tbgn = ttsk.getCreationDate();
                 }
                 if(ttsk.getFinishedDate() != null
-                && (tend == null  || tend.before(ttsk.getFinishedDate()))){
+                        && (tend == null  || tend.before(ttsk.getFinishedDate()))){
                     tend = ttsk.getFinishedDate();
                 }
                 String tnam = (ttsk.getName() != null ? ttsk.getName() : "");
@@ -111,12 +111,12 @@ public class ReviewMailSend extends UnifiedAgent {
                 System.out.println("TASK-Code[" + tcnt + "]:" + tcod);
 
                 if(tnam.equals("Start Task")
-                || tcod.equals("Step01")){
+                        || tcod.equals("Step01")){
                     rvws.put("Step01", ttsk);
                     continue;
                 }
                 if(ttsk.getLoadedParentTask() != null
-                && (tnam.equals("Consolidator Review") || tcod.equals("Step03"))){
+                        && (tnam.equals("Consolidator Review") || tcod.equals("Step03"))){
                     ccnt++;
                     rvws.put("Step03_" + (ccnt <= 9 ? "0" : "") + ccnt, ttsk);
                     continue;
@@ -171,30 +171,23 @@ public class ReviewMailSend extends UnifiedAgent {
 
             for (String ekey : ebks.keySet()) {
                 String efld = ebks.getString(ekey);
-                if (efld.isEmpty()) {
-                    continue;
-                }
+                if(efld.isEmpty()){continue;}
                 String eval = "";
 
                 System.out.println(" [" + ekey + "]  : " + efld);
 
-                if (efld.equals("@FILE_NAME@")) {
+                if(efld.equals("@FILE_NAME@")){
                     eval = Utils.nameDocument(mainDoc);
                 }
-                log.info("Eval1:" + eval);
-                if (eval != null && eval.isEmpty() && Utils.hasDescriptor((IInformationObject) proi, efld)) {
+                if(eval.isEmpty() && Utils.hasDescriptor((IInformationObject) proi, efld)){
                     eval = proi.getDescriptorValue(efld, String.class);
                 }
-                log.info("Eval2:" + eval);
-                if (eval != null && eval.isEmpty() && Utils.hasDescriptor((IInformationObject) mainDoc, efld)) {
+                if(eval.isEmpty() && Utils.hasDescriptor((IInformationObject) mainDoc, efld)){
                     eval = mainDoc.getDescriptorValue(efld, String.class);
                 }
-                log.info("Eval3:" + eval);
-                if (eval != null){
-                    dbks.put(ekey, eval);
-                }
+                dbks.put(ekey, eval);
             }
-            log.info("Eval is Added finished...");
+
             JSONObject rsts = Utils.getMainDocReviewStatuses(ses, srv, prjn);
             JSONObject ists = Utils.getIssueStatuses(ses, srv, prjn);
 
@@ -204,13 +197,13 @@ public class ReviewMailSend extends UnifiedAgent {
             }
 
             if(dbks.has("AprvCode")
-            && rsts.has(dbks.getString("AprvCode"))){
+                    && rsts.has(dbks.getString("AprvCode"))){
                 dbks.put("AprvDesc", rsts.getString(dbks.getString("AprvCode")));
             }
             if(dbks.has("IssueStatus")
-            && ists.has(dbks.getString("IssueStatus"))){
+                    && ists.has(dbks.getString("IssueStatus"))){
                 dbks.put("IssueStatus", dbks.getString("IssueStatus")
-                + "-" + ists.getString(dbks.getString("IssueStatus")));
+                        + "-" + ists.getString(dbks.getString("IssueStatus")));
             }
 
             List<String> mails = new ArrayList<>();
@@ -252,15 +245,15 @@ public class ReviewMailSend extends UnifiedAgent {
             }
             String tplMailPath = Utils.exportDocument(mtpl, Conf.DocReviewPaths.MainPath, mtpn + "[" + uniqueId + "]");
             String mailExcelPath = Utils.saveDocReviewExcel(tplMailPath, Conf.DocReviewSheetIndex.Mail,
-                Conf.DocReviewPaths.MainPath + "/" + mtpn + "[" + uniqueId + "].xlsx", dbks
+                    Conf.DocReviewPaths.MainPath + "/" + mtpn + "[" + uniqueId + "].xlsx", dbks
             );
 
             Utils.removeRows(mailExcelPath, mailExcelPath,
-                Conf.DocReviewSheetIndex.Mail,
-                Conf.DocReviewRowGroups.WRevHs,
-                Conf.DocReviewRowGroups.WRevHColInx,
-                Conf.DocReviewRowGroups.WRevHHideCols,
-                wrhLines
+                    Conf.DocReviewSheetIndex.Mail,
+                    Conf.DocReviewRowGroups.WRevHs,
+                    Conf.DocReviewRowGroups.WRevHColInx,
+                    Conf.DocReviewRowGroups.WRevHHideCols,
+                    wrhLines
             );
 
             String mailHtmlPath = Utils.convertExcelToHtml(mailExcelPath, Conf.DocReviewPaths.MainPath + "/" + mtpn + "[" + uniqueId + "].html");
@@ -317,7 +310,7 @@ public class ReviewMailSend extends UnifiedAgent {
             log.error ("    Class       : " + e.getClass());
             log.error ("    Stack-Trace : " + e.getStackTrace().toString() );
 
-           return resultError("Exception : " + e.getMessage());
+            return resultError("Exception : " + e.getMessage());
         }
 
         System.out.println("Finished");
@@ -325,20 +318,18 @@ public class ReviewMailSend extends UnifiedAgent {
     }
 
     private void convertToPDF(IDocument doc) throws IOException {
-        String excelPath = Utils.exportDocument(doc, Conf.DocReviewPaths.MainPath, "CRS" + "[" + uniqueId + "]");
-        String filePathPDF = "";
-        if (excelPath != "") {
+
+
+        String excelPath = Utils.exportDocument( doc , Conf.DocReviewPaths.MainPath , "CRS" + "[" + uniqueId + "]");
+
+        if( excelPath !="" ) {
             log.info("Excel File Path For :" + uniqueId + " is " + excelPath);
-            if(excelPath.contains(".pdf")){
-                filePathPDF = excelPath;
-            }else {
-                filePathPDF = Utils.convertExcelToPdf(excelPath, Conf.DocReviewPaths.MainPath + "/" + "CRS" + "[" + uniqueId + "].pdf");
-            }
+            String filePathPDF = Utils.convertExcelToPdf(excelPath, Conf.DocReviewPaths.MainPath + "/" + "CRS" + "[" + uniqueId + "].pdf");
+
             doc.addRepresentation(".pdf", "PDF View").addPartDocument(filePathPDF);
             doc.setDefaultRepresentation(doc.getRepresentationCount() - 1);
             doc.commit();
-        } else {
-            log.error("Excel File Path For :" + uniqueId + " is EMPTY");
-        }
+        }else
+            log.error("Excel File Path For :" + uniqueId + " is EMPTY" );
     }
 }
