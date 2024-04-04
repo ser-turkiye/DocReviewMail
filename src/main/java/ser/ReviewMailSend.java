@@ -171,23 +171,30 @@ public class ReviewMailSend extends UnifiedAgent {
 
             for (String ekey : ebks.keySet()) {
                 String efld = ebks.getString(ekey);
-                if(efld.isEmpty()){continue;}
+                if (efld.isEmpty()) {
+                    continue;
+                }
                 String eval = "";
 
                 System.out.println(" [" + ekey + "]  : " + efld);
 
-                if(efld.equals("@FILE_NAME@")){
+                if (efld.equals("@FILE_NAME@")) {
                     eval = Utils.nameDocument(mainDoc);
                 }
-                if(eval.isEmpty() && Utils.hasDescriptor((IInformationObject) proi, efld)){
+                log.info("Eval1:" + eval);
+                if (eval != null && eval.isEmpty() && Utils.hasDescriptor((IInformationObject) proi, efld)) {
                     eval = proi.getDescriptorValue(efld, String.class);
                 }
-                if(eval.isEmpty() && Utils.hasDescriptor((IInformationObject) mainDoc, efld)){
+                log.info("Eval2:" + eval);
+                if (eval != null && eval.isEmpty() && Utils.hasDescriptor((IInformationObject) mainDoc, efld)) {
                     eval = mainDoc.getDescriptorValue(efld, String.class);
                 }
-                dbks.put(ekey, eval);
+                log.info("Eval3:" + eval);
+                if (eval != null){
+                    dbks.put(ekey, eval);
+                }
             }
-
+            log.info("Eval is Added finished...");
             JSONObject rsts = Utils.getMainDocReviewStatuses(ses, srv, prjn);
             JSONObject ists = Utils.getIssueStatuses(ses, srv, prjn);
 
@@ -318,18 +325,20 @@ public class ReviewMailSend extends UnifiedAgent {
     }
 
     private void convertToPDF(IDocument doc) throws IOException {
-
-
-        String excelPath = Utils.exportDocument( doc , Conf.DocReviewPaths.MainPath , "CRS" + "[" + uniqueId + "]");
-
-        if( excelPath !="" ) {
+        String excelPath = Utils.exportDocument(doc, Conf.DocReviewPaths.MainPath, "CRS" + "[" + uniqueId + "]");
+        String filePathPDF = "";
+        if (excelPath != "") {
             log.info("Excel File Path For :" + uniqueId + " is " + excelPath);
-            String filePathPDF = Utils.convertExcelToPdf(excelPath, Conf.DocReviewPaths.MainPath + "/" + "CRS" + "[" + uniqueId + "].pdf");
-
+            if(excelPath.contains(".pdf")){
+                filePathPDF = excelPath;
+            }else {
+                filePathPDF = Utils.convertExcelToPdf(excelPath, Conf.DocReviewPaths.MainPath + "/" + "CRS" + "[" + uniqueId + "].pdf");
+            }
             doc.addRepresentation(".pdf", "PDF View").addPartDocument(filePathPDF);
             doc.setDefaultRepresentation(doc.getRepresentationCount() - 1);
             doc.commit();
-        }else
-            log.error("Excel File Path For :" + uniqueId + " is EMPTY" );
+        } else {
+            log.error("Excel File Path For :" + uniqueId + " is EMPTY");
+        }
     }
 }
