@@ -7,7 +7,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -17,69 +16,67 @@ import org.apache.logging.log4j.Logger;
 
 
 public class ReviewMailSend extends UnifiedAgent {
-
     Logger log = LogManager.getLogger();
     String uniqueId;
-    ISession ses;
-    IDocumentServer srv;
-    IBpmService bpm;
-    private ProcessHelper helper;
+    private ProcessHelper processHelper;
     @Override
     protected Object execute() {
-
-
         if (getEventTask() == null)
             return resultError("Null Document object");
 
+        Utils.session = getSes();
+        Utils.bpm = getBpm();
+        Utils.server = Utils.session.getDocumentServer();
+        Utils.loadDirectory(Conf.Paths.MainPath);
 
-
-        com.spire.license.LicenseProvider.setLicenseKey(Conf.Licences.SPIRE_XLS);
-
-        ses = getSes();
-        srv = ses.getDocumentServer();
-        bpm = getBpm();
         try {
-            this.helper = new ProcessHelper(ses);
-            ITask task = getEventTask();
-            int cnt=5;
-            cnt++;
+            processHelper = new ProcessHelper(Utils.session);
+            JSONObject scfg = Utils.getSystemConfig();
+            if(scfg.has("LICS.SPIRE_XLS")){
+                com.spire.license.LicenseProvider.setLicenseKey(scfg.getString("LICS.SPIRE_XLS"));
+            }
 
-            (new File(Conf.DocReviewPaths.MainPath)).mkdir();
+            ITask task = getEventTask();
+            String taskCode = task.getCode();
+            taskCode = (taskCode == null ? "" : taskCode);
+
+            //IValueDescriptor[] iDesc = task.getInternalDescriptorList();
+
             IProcessInstance proi = task.getProcessInstance();
+
+            //IValueDescriptor[] internalDesc = proi.getInternalDescriptorList();
 
             String prjn = proi.getDescriptorValue(Conf.Descriptors.ProjectNo, String.class);
             if(prjn.isEmpty()){
                 throw new Exception("Project no is empty.");
             }
-            String mdid = proi.getDescriptorValue(Conf.Descriptors.MainDocRef, String.class);
+            String mdid = proi.getDescriptorValue(Conf.Descriptors.MainDocReference, String.class);
             if(mdid.isEmpty()){
                 throw new Exception("Main Doc Ref is empty.");
             }
 
-            IInformationObject prjt = Utils.getProjectWorkspace(prjn, helper);
+            IInformationObject prjt = Utils.getProjectWorkspace(prjn, processHelper);
             if(prjt == null){
                 throw new Exception("Project not found [" + prjn + "].");
             }
-            IDocument mainDoc = srv.getDocument4ID(mdid , ses);
+            IDocument mainDoc = Utils.server.getDocument4ID(mdid , Utils.session);
             if(mainDoc == null){
                 throw new Exception("Main Document not found [" + mdid + "].");
             }
 
-            ILink[] slns = srv.getReferencedRelationships(ses, mainDoc, true);
+            ILink[] slns = Utils.server.getReferencedRelationships(Utils.session, mainDoc, true);
             for(ILink slnk : slns){
                 IInformationObject stgt = slnk.getTargetInformationObject();
 
                 if(stgt.getClassID().equals(Conf.ClassIDs.EngineeringAttachments)
                         && Utils.hasDescriptor((IInformationObject) stgt, Conf.Descriptors.DocType)
                         && stgt.getDescriptorValue(Conf.Descriptors.DocType, String.class).equals("Review-History")){
-                    srv.removeRelationship(ses, slnk);
-                    continue;
+                    Utils.server.removeRelationship(Utils.session, slnk);
                 }
                 if(stgt.getClassID().equals(Conf.ClassIDs.EngineeringAttachments)
                         && Utils.hasDescriptor((IInformationObject) stgt, Conf.Descriptors.DocType)
                         && stgt.getDescriptorValue(Conf.Descriptors.DocType, String.class).equals("CRS")){
-                    srv.removeRelationship(ses, slnk);
-                    continue;
+                    Utils.server.removeRelationship(Utils.session, slnk);
                 }
             }
 
@@ -104,11 +101,10 @@ public class ReviewMailSend extends UnifiedAgent {
                 String tnam = (ttsk.getName() != null ? ttsk.getName() : "");
                 String tcod = (ttsk.getCode() != null ? ttsk.getCode() : "");
 
-
                 tcnt++;
 
-                System.out.println("TASK-Name[" + tcnt + "]:" + tnam);
-                System.out.println("TASK-Code[" + tcnt + "]:" + tcod);
+                log.info("TASK-Name[" + tcnt + "]:" + tnam);
+                log.info("TASK-Code[" + tcnt + "]:" + tcod);
 
                 if(tnam.equals("Start Task")
                         || tcod.equals("Step01")){
@@ -117,9 +113,14 @@ public class ReviewMailSend extends UnifiedAgent {
                 }
                 if(ttsk.getLoadedParentTask() != null
                         && (tnam.equals("Consolidator Review") || tcod.equals("Step03"))){
-                    ccnt++;
-                    rvws.put("Step03_" + (ccnt <= 9 ? "0" : "") + ccnt, ttsk);
-                    continue;
+
+                    IWorkbasket cwbk = ttsk.getCurrentWorkbasket();
+                    String wbnm = (cwbk != null ? cwbk.getFullName() : "");
+                    if(wbnm != null && !wbnm.equals("System")) {
+                        ccnt++;
+                        rvws.put("Step03_" + (ccnt <= 9 ? "0" : "") + ccnt, ttsk);
+                        continue;
+                    }
                 }
                 if(tnam.equals("Cross checks & prepare transmittal")
                         || tcod.equals("Step04")){
@@ -148,11 +149,12 @@ public class ReviewMailSend extends UnifiedAgent {
 
             proi.commit();
 
-            IInformationObject[] sprs = Utils.getSubProcessies(proi.getID(), helper);
+            IInformationObject[] sprs = Utils.getSubProcessies(proi.getID(), processHelper);
 
             Integer scnt = 0;
             for(IInformationObject sinf : sprs){
                 ITask stsk = (ITask) sinf;
+
 
                 String snam = (stsk.getName() != null ? stsk.getName() : "");
                 String scod = (stsk.getCode() != null ? stsk.getCode() : "");
@@ -174,7 +176,7 @@ public class ReviewMailSend extends UnifiedAgent {
                 if(efld.isEmpty()){continue;}
                 String eval = "";
 
-                System.out.println(" [" + ekey + "]  : " + efld);
+                log.info(" [" + ekey + "]  : " + efld);
 
                 if(efld.equals("@FILE_NAME@")){
                     eval = Utils.nameDocument(mainDoc);
@@ -188,11 +190,11 @@ public class ReviewMailSend extends UnifiedAgent {
                 dbks.put(ekey, eval);
             }
 
-            JSONObject rsts = Utils.getMainDocReviewStatuses(ses, srv, prjn);
-            JSONObject ists = Utils.getIssueStatuses(ses, srv, prjn);
+            JSONObject rsts = Utils.getMainDocReviewStatuses(prjn);
+            JSONObject ists = Utils.getIssueStatuses(prjn);
 
             dbks.put("AprvCode", "");
-            if(Utils.hasDescriptor((IInformationObject) mainDoc, Conf.Descriptors.AprvCode)){
+            if(!taskCode.equals("NoMail") && Utils.hasDescriptor((IInformationObject) mainDoc, Conf.Descriptors.AprvCode)){
                 dbks.put("AprvCode", mainDoc.getDescriptorValue(Conf.Descriptors.AprvCode, String.class));
             }
 
@@ -211,11 +213,16 @@ public class ReviewMailSend extends UnifiedAgent {
             for(String wtro : wtrs){
                 if(!rvws.has(wtro)){continue;}
                 ITask ctsk = (ITask) rvws.get(wtro);
+                IWorkbasket cwbk = ctsk.getCurrentWorkbasket();
                 IUser cusr = ctsk.getFinishedBy();
                 IDecision cdec = ctsk.getDecision();
                 Date ddte = ctsk.getFinishedDate();
                 String sdte = (ddte == null ? "" : (new SimpleDateFormat("dd/MM/yyyy HH:mm")).format(ddte));
                 String fnam = (cusr != null ? cusr.getFullName() : "");
+                String wbnm = (cwbk != null ? cwbk.getFullName() : "");
+
+                String anam = fnam;
+
                 String tcod = (cdec != null ? cdec.getCode() : "");
                 String dcod = (rsts.has(tcod) ? tcod : "");
                 String dtxt = (rsts.has(tcod) ? rsts.getString(tcod) : "");
@@ -227,7 +234,8 @@ public class ReviewMailSend extends UnifiedAgent {
                 }
 
                 dbks.put(wtro + "_Name", ctsk.getName() != null ? ctsk.getName() : "");
-                dbks.put(wtro + "_User", fnam);
+                dbks.put(wtro + "_User", wbnm);
+                dbks.put(wtro + "_Cmpl", fnam);
                 dbks.put(wtro + "_AprvDate", sdte);
                 dbks.put(wtro + "_AprvText", dcod + (dcod != "" && dtxt != "" ? "-" : "") + dtxt);
                 dbks.put(wtro + "_Comments", cmnt);
@@ -239,13 +247,13 @@ public class ReviewMailSend extends UnifiedAgent {
 
             //dbks.put("DoxisLink", Conf.DocReview.WebBase + helper.getTaskURL(proi.getID()));
             String mtpn = "DOC_REVIEW_MAIL";
-            IDocument mtpl = Utils.getTemplateDocument(prjn, mtpn, helper);
+            IDocument mtpl = Utils.getTemplateDocument(prjt, mtpn);
             if(mtpl == null){
                 throw new Exception("Template-Document [ " + mtpn + " ] not found.");
             }
-            String tplMailPath = Utils.exportDocument(mtpl, Conf.DocReviewPaths.MainPath, mtpn + "[" + uniqueId + "]");
+            String tplMailPath = Utils.exportDocument(mtpl, Conf.Paths.MainPath, mtpn + "[" + uniqueId + "]");
             String mailExcelPath = Utils.saveDocReviewExcel(tplMailPath, Conf.DocReviewSheetIndex.Mail,
-                    Conf.DocReviewPaths.MainPath + "/" + mtpn + "[" + uniqueId + "].xlsx", dbks
+                    Conf.Paths.MainPath + "/" + mtpn + "[" + uniqueId + "].xlsx", dbks
             );
 
             Utils.removeRows(mailExcelPath, mailExcelPath,
@@ -256,12 +264,14 @@ public class ReviewMailSend extends UnifiedAgent {
                     wrhLines
             );
 
-            String mailHtmlPath = Utils.convertExcelToHtml(mailExcelPath, Conf.DocReviewPaths.MainPath + "/" + mtpn + "[" + uniqueId + "].html");
-            String mailPdfPath = Utils.convertExcelToPdf(mailExcelPath, Conf.DocReviewPaths.MainPath + "/" + mtpn + "[" + uniqueId + "].pdf");
+            String mailHtmlPath = Utils.convertExcelToHtml(mailExcelPath, Conf.Paths.MainPath + "/" + mtpn + "[" + uniqueId + "].html");
+            String mailPdfPath = Utils.convertExcelToPdf(mailExcelPath, Conf.Paths.MainPath + "/" + mtpn + "[" + uniqueId + "].pdf");
 
-            IDocument rvwDoc = Utils.createReviewHistoryAttachment(ses, srv, mainDoc);
+            String docType = (!taskCode.equals("NoMail") ? "Review-History" : "History");
+            Utils.deleteSubAttachments( mainDoc.getID(), "History", processHelper);
+            IDocument rvwDoc = Utils.createSubAttachment(mainDoc, docType);
 
-            IRepresentation htmt = rvwDoc.addRepresentation(".pdf", "Review History");
+            IRepresentation htmt = rvwDoc.addRepresentation(".pdf", docType);
             htmt.addPartDocument(mailPdfPath);
 
             rvwDoc.commit();
@@ -270,41 +280,38 @@ public class ReviewMailSend extends UnifiedAgent {
             links.addInformationObject(rvwDoc.getID());
 
 
-            ILink lnk1 = srv.createLink(ses, mainDoc.getID(), null, rvwDoc.getID());
+            ILink lnk1 = Utils.server.createLink(Utils.session, mainDoc.getID(), null, rvwDoc.getID());
             lnk1.commit();
 
 
-            IDocument cdoc = (IDocument) Utils.getEngineeringCRS(mainDoc.getID(), helper);
-            if(cdoc != null){
+            IDocument cdoc = (IDocument) Utils.getEngineeringCRS(mainDoc.getID(), processHelper);
+            if(cdoc != null && !taskCode.equals("NoMail")){
                 this.convertToPDF(cdoc);
-                ILink lnk2 = srv.createLink(ses, mainDoc.getID(), null, cdoc.getID());
+                ILink lnk2 = Utils.server.createLink(Utils.session, mainDoc.getID(), null, cdoc.getID());
                 lnk2.commit();
             }
 
             mainDoc.commit();
             proi.commit();
 
-            if(mails.size() > 0) {
+            if(mails.size() > 0 && !taskCode.equals("NoMail")) {
                 JSONObject mail = new JSONObject();
 
                 mail.put("To", String.join(";", mails));
-                mail.put("Subject", "DocReview > " + dbks.getString("DocNo") + " / " + dbks.getString("RevNo"));
+                mail.put("Subject", "Review History For " + dbks.getString("DocNo") + " / " + dbks.getString("RevNo"));
                 mail.put("BodyHTMLFile", mailHtmlPath);
 
                 try {
-                    Utils.sendHTMLMail(ses, srv, mtpn, mail);
-                } catch (Exception ex){
-                    System.out.println("EXCP [Send-Mail] : " + ex.getMessage());
+                    Utils.sendHTMLMail(mail);
+                }catch(Exception ex){
+                    log.error("EXCP [Send-Mail] : " + ex.getMessage());
                 }
             }
 
-            System.out.println("Tested.");
+            log.info("Tested.");
 
         } catch (Exception e) {
             //throw new RuntimeException(e);
-            System.out.println("Exception       : " + e.getMessage());
-            System.out.println("    Class       : " + e.getClass());
-            System.out.println("    Stack-Trace : " + e.getStackTrace() );
 
             log.error ("Exception       : " + e.getMessage());
             log.error ("    Class       : " + e.getClass());
@@ -313,22 +320,21 @@ public class ReviewMailSend extends UnifiedAgent {
             return resultError("Exception : " + e.getMessage());
         }
 
-        System.out.println("Finished");
+        log.info("Finished");
         return resultSuccess("Ended successfully");
     }
 
     private void convertToPDF(IDocument doc) throws IOException {
+        String excelPath = Utils.exportDocument(doc , Conf.Paths.MainPath , "CRS" + "[" + uniqueId + "]");
 
-
-        String excelPath = Utils.exportDocument( doc , Conf.DocReviewPaths.MainPath , "CRS" + "[" + uniqueId + "]");
-
-        if( excelPath !="" ) {
+        if(excelPath.contains(".xlsx")) {
             log.info("Excel File Path For :" + uniqueId + " is " + excelPath);
-            String filePathPDF = Utils.convertExcelToPdf(excelPath, Conf.DocReviewPaths.MainPath + "/" + "CRS" + "[" + uniqueId + "].pdf");
+            String filePathPDF = Utils.convertExcelToPdf(excelPath, Conf.Paths.MainPath + "/" + "CRS" + "[" + uniqueId + "].pdf");
 
             doc.addRepresentation(".pdf", "PDF View").addPartDocument(filePathPDF);
-            doc.setDefaultRepresentation(doc.getRepresentationCount() - 1);
+            doc.setDefaultRepresentation(doc.getRepresentationCount()-1);
             doc.commit();
+
         }else
             log.error("Excel File Path For :" + uniqueId + " is EMPTY" );
     }
