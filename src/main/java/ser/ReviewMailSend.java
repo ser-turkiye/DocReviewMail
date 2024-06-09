@@ -181,11 +181,14 @@ public class ReviewMailSend extends UnifiedAgent {
                 if(efld.equals("@FILE_NAME@")){
                     eval = Utils.nameDocument(mainDoc);
                 }
+
                 if(eval.isEmpty() && Utils.hasDescriptor((IInformationObject) proi, efld)){
                     eval = proi.getDescriptorValue(efld, String.class);
+                    eval = (eval != null ? eval : "");
                 }
                 if(eval.isEmpty() && Utils.hasDescriptor((IInformationObject) mainDoc, efld)){
                     eval = mainDoc.getDescriptorValue(efld, String.class);
+                    eval = (eval != null ? eval : "");
                 }
                 dbks.put(ekey, eval);
             }
