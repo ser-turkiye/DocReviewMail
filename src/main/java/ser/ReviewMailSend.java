@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 public class ReviewMailSend extends UnifiedAgent {
     Logger log = LogManager.getLogger();
     String uniqueId;
+    String approveCode = "";
     private ProcessHelper processHelper;
     @Override
     protected Object execute() {
@@ -43,7 +44,8 @@ public class ReviewMailSend extends UnifiedAgent {
             //IValueDescriptor[] iDesc = task.getInternalDescriptorList();
 
             IProcessInstance proi = task.getProcessInstance();
-
+            //approveCode = proi.getDescriptorValue(Conf.Descriptors.AprvCode);
+            //log.info("APPROVE CODE1 :" + approveCode);
             //IValueDescriptor[] internalDesc = proi.getInternalDescriptorList();
 
             String prjn = proi.getDescriptorValue(Conf.Descriptors.ProjectNo, String.class);
@@ -62,6 +64,17 @@ public class ReviewMailSend extends UnifiedAgent {
             IDocument mainDoc = Utils.server.getDocument4ID(mdid , Utils.session);
             if(mainDoc == null){
                 throw new Exception("Main Document not found [" + mdid + "].");
+            }
+
+            if(Utils.hasDescriptor((IInformationObject) mainDoc, Conf.Descriptors.AprvCode)){
+                approveCode = mainDoc.getDescriptorValue(Conf.Descriptors.AprvCode, String.class);
+            }
+            log.info("APPROVE CODE FROM DESCRIPTOR :" + approveCode);
+            if(approveCode == null || approveCode.isEmpty()){
+                approveCode = this.getApproveCode(task);
+                log.info("APPROVE CODE FROM FUNC :" + approveCode);
+                mainDoc.setDescriptorValue(Conf.Descriptors.AprvCode,approveCode);
+                //mainDoc.commit();
             }
 
             ILink[] slns = Utils.server.getReferencedRelationships(Utils.session, mainDoc, true);
@@ -198,7 +211,7 @@ public class ReviewMailSend extends UnifiedAgent {
 
             dbks.put("AprvCode", "");
             if(!taskCode.equals("NoMail") && Utils.hasDescriptor((IInformationObject) mainDoc, Conf.Descriptors.AprvCode)){
-                dbks.put("AprvCode", mainDoc.getDescriptorValue(Conf.Descriptors.AprvCode, String.class));
+                dbks.put("AprvCode", approveCode);
             }
 
             if(dbks.has("AprvCode")
@@ -326,7 +339,6 @@ public class ReviewMailSend extends UnifiedAgent {
         log.info("Finished");
         return resultSuccess("Ended successfully");
     }
-
     private void convertToPDF(IDocument doc) throws IOException {
         String excelPath = Utils.exportDocument(doc , Conf.Paths.MainPath , "CRS" + "[" + uniqueId + "]");
 
@@ -340,5 +352,40 @@ public class ReviewMailSend extends UnifiedAgent {
 
         }else
             log.error("Excel File Path For :" + uniqueId + " is EMPTY" );
+    }
+    private String getApproveCode(ITask task){
+        String rtrn = "";
+        String taskCode = task.getCode();
+        taskCode = (taskCode == null ? "" : taskCode);
+        IProcessInstance proi = task.getProcessInstance();
+        IDocument mainDocument = (IDocument) proi.getMainInformationObject();
+        if(mainDocument == null)return rtrn;
+        if(taskCode.equals("NoMail"))return rtrn;
+
+        rtrn = proi.getDescriptorValue(Conf.Descriptors.AprvCode);
+        if(rtrn == null || rtrn.isEmpty()){
+            rtrn = (Utils.hasDescriptor((IInformationObject) mainDocument, Conf.Descriptors.AprvCode) ? mainDocument.getDescriptorValue(Conf.Descriptors.AprvCode, String.class) : rtrn);
+            rtrn = (rtrn == null ? "" : rtrn);
+        }
+        log.info("APPROVE CODE2 :" + rtrn);
+        if(!Objects.equals(rtrn, ""))return rtrn;
+
+        Collection<ITask> tsks = proi.findTasks();
+        for(ITask ttsk : tsks) {
+            if (ttsk.getStatus() != TaskStatus.COMPLETED) {
+                continue;
+            }
+            if(rtrn != ""){break;}
+            String tnam = (ttsk.getName() != null ? ttsk.getName() : "");
+            String tcod = (ttsk.getCode() != null ? ttsk.getCode() : "");
+            //log.info("TASK-Name[" + tnam + "]");
+            //log.info("TASK-Code[" + tcod + "]");
+            if(ttsk.getLoadedParentTask() != null && (tnam.equals("Consolidator Review") || tcod.equals("Step03"))){
+                rtrn = ttsk.getDecision().getCode();
+                log.info("ApprovalCode from decisionCode IS:" + rtrn);
+
+            }
+        }
+        return rtrn;
     }
 }
